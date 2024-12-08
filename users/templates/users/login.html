@@ -1,21 +1,20 @@
-<!-- users/templates/users/login.html -->
-
 {% block content %}
   <h2>Login</h2>
-<p>Enter your credentials to access your account.</p>
+  <p>Enter your credentials to access your account.</p>
 
-{% if messages %}
-  <ul>
-    {% for message in messages %}
-      <li>{{ message }}</li>
-    {% endfor %}
-  </ul>
-{% endif %}
+  {% if messages %}
+    <ul>
+      {% for message in messages %}
+        <li>{{ message }}</li>
+      {% endfor %}
+    </ul>
+  {% endif %}
 
-<form method="POST">
-    {% csrf_token %}
-    <!-- Form fields for username and password -->
-    <button type="submit">Login</button>
-</form>
+  <form method="POST">
+      {% csrf_token %}
+      <!-- Form fields for username and password -->
+      <button type="submit">Login</button>
+  </form>
 
-<p>Don't have an account? <a href="{% url 'users:register' %}">Create one here</a></p>
+  <p>Don't have an account? <a href="{% url 'users:register' %}">Create one here</a></p>
+{% endblock %}
