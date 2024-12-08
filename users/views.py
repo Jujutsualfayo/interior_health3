@@ -42,8 +42,7 @@ def user_login(request):
 # User logout view
 def user_logout(request):
     logout(request)
-    messages.success(request, 'You have been logged out.')
-    return redirect('login')
+    return redirect('users:login')  # Use 'users:login' here
 
 # Profile view
 @login_required
