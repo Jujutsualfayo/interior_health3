@@ -9,7 +9,7 @@ from django.urls import reverse
 
 # Home view
 def home(request):
-    return render(request, 'users/home.html')  # Rendering the home.html template for the homepage
+    return render(request, 'home.html')  # Now rendering the global home.html template
 
 # User registration view
 def register(request):
