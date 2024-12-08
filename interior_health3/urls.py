@@ -1,8 +1,10 @@
 from django.contrib import admin
 from django.urls import path, include
+from users import views as user_views  # Import views from the users app
 
 urlpatterns = [
-    path('admin/', admin.site.urls),  # Admin panel
-    path('', user_views.home, name='home'), 
-    path('', include('users.urls')),  # Include URLs from the `users` app
+    path('admin/', admin.site.urls),
+    path('', user_views.home, name='home'),  # Global home view
+    path('users/', include('users.urls')),  # Include URLs from the users app
+    # Add other app URLs here...
 ]
