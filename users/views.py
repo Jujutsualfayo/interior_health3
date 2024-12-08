@@ -5,6 +5,7 @@ from django.contrib.auth.models import Group
 from django.http import HttpResponse
 from .forms import UserRegistrationForm, UserUpdateForm, ProfileUpdateForm
 from django.contrib import messages
+from django.urls import reverse
 
 # Home view
 def home(request):
@@ -20,7 +21,7 @@ def register(request):
             group = Group.objects.get(name='Patient')  # Ensure this group exists in your DB
             user.groups.add(group)
             messages.success(request, 'Your account has been created! You can now log in.')
-            return redirect('login')
+            return redirect(reverse('users:login'))
     else:
         form = UserRegistrationForm()
     return render(request, 'users/register.html', {'form': form})
