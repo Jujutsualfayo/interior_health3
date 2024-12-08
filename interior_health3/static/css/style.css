@@ -1,0 +1,39 @@
+/* static/css/styles.css */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 0;
+}
+
+header {
+    background-color: #003366;
+    color: #ffffff;
+    padding: 10px;
+    text-align: center;
+}
+
+nav ul {
+    list-style: none;
+    padding: 0;
+}
+
+nav ul li {
+    display: inline;
+    margin: 0 10px;
+}
+
+a {
+    color: #ffffff;
+    text-decoration: none;
+}
+
+footer {
+    text-align: center;
+    background-color: #003366;
+    color: #ffffff;
+    padding: 10px;
+    position: fixed;
+    width: 100%;
+    bottom: 0;
+}
