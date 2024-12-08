@@ -1,0 +1,20 @@
+{% extends 'base_generic.html' %}
+
+{% load static %}
+
+{% block content %}
+<div class="home-page">
+  <h2>Welcome to Interior Health</h2>
+  <p>Your gateway to affordable healthcare in the interior region.</p>
+
+  <div class="cta">
+    <a href="{% url 'register' %}" class="btn">Register</a>
+    <a href="{% url 'login' %}" class="btn">Login</a>
+  </div>
+
+  <!-- Optional: Adding Static Image for Appeal -->
+  <div class="image-container">
+    <img src="{% static 'test_image.jpg' %}" alt="Healthcare Image">
+  </div>
+</div>
+{% endblock %}
