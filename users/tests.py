@@ -26,7 +26,7 @@ class UsersAppTests(TestCase):
         # Make sure the 'users:home' URL is defined in your app's urls.py
         response = self.client.get(reverse('users:home'))
         self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, 'users/home.html')
+        self.assertTemplateUsed(response, '/home.html')
 
     def test_user_registration(self):
         """Test user registration form submission."""
