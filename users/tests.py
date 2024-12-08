@@ -1,7 +1,8 @@
 from django.test import TestCase, Client
 from django.urls import reverse
-from django.contrib.auth import get_user_model  # Use the correct custom user model
+from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Group
+
 
 class UsersAppTests(TestCase):
     def setUp(self):
@@ -9,7 +10,7 @@ class UsersAppTests(TestCase):
         self.group = Group.objects.create(name="Patient")
 
         # Create a test user using the custom User model
-        User = get_user_model()  # Get the custom User model
+        User = get_user_model()
         self.user = User.objects.create_user(
             username="testuser",
             email="testuser@example.com",
@@ -22,12 +23,14 @@ class UsersAppTests(TestCase):
 
     def test_home_page(self):
         """Test the home page loads successfully."""
+        # Make sure the 'users:home' URL is defined in your app's urls.py
         response = self.client.get(reverse('users:home'))
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'users/home.html')
 
     def test_user_registration(self):
         """Test user registration form submission."""
+        User = get_user_model()
         response = self.client.post(reverse('users:register'), {
             'username': 'newuser',
             'email': 'newuser@example.com',
