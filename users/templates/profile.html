@@ -1,0 +1,22 @@
+<!-- users/templates/users/profile.html -->
+{% extends 'base_generic.html' %}
+
+{% block content %}
+  <h2>Update Your Profile</h2>
+
+  <form method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    
+    <!-- User update form fields -->
+    <h3>Update your personal information:</h3>
+    {{ u_form.as_p }}
+
+    <h3>Update your profile picture:</h3>
+    {{ p_form.as_p }}
+    
+    <button type="submit">Update Profile</button>
+  </form>
+
+  <!-- Add a logout link -->
+  <p><a href="{% url 'logout' %}">Logout</a></p>
+{% endblock %}
