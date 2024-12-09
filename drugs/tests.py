@@ -46,12 +46,25 @@ class DrugFormTest(TestCase):
      form = DrugForm(data=form_data)
      self.assertTrue(form.is_valid())
 
+    from django.test import TestCase
+from .forms import DrugForm
+
+class DrugFormTest(TestCase):
     def test_form_invalid(self):
-        """Test if the form is invalid with missing required fields."""
-        form_data = {'name': '', 'category': 'Antibiotic'}
-        form = DrugForm(data=form_data)
-        self.assertFalse(form.is_valid())
-        self.assertEqual(len(form.errors), 1)  # 'name' field is required
+        # Create a form with missing required fields (only missing the 'name' field)
+        data = {
+            'category': 'Painkiller',
+            'description': 'Used to relieve pain.',
+            'manufacturer': 'PharmaCorp',
+            'expiry_date': '2025-12-31',
+            'price': 10.99,
+            'stock_quantity': 100,
+            'minimum_stock': 10,
+        }
+        form = DrugForm(data)
+        self.assertFalse(form.is_valid())  # Form should be invalid
+        self.assertEqual(len(form.errors), 1)  # Expecting only 1 error for the 'name' field
+
 
 class DrugViewTest(TestCase):
     """Test the views in the drugs app."""
