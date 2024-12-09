@@ -2,11 +2,15 @@
   <h2>Drugs Available</h2>
 
   <!-- Display the drug list -->
-  <ul>
-    {% for drug in drugs %}
-      <li>{{ drug.name }} - {{ drug.price }} ({{ drug.quantity }} available)</li>
-    {% endfor %}
-  </ul>
+  {% if drugs %}
+    <ul>
+      {% for drug in drugs %}
+        <li>{{ drug.name }} - {{ drug.price }} ({{ drug.stock_quantity }} available)</li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p>No drugs available.</p>
+  {% endif %}
 
   <!-- Display the form to add a new drug -->
   <h3>Add a New Drug</h3>
