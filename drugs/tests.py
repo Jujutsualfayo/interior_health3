@@ -43,8 +43,8 @@ class DrugFormTest(TestCase):
      self.assertEqual(len(form.errors), 6)  # Now checking for the correct number of missing fields
 
     
-        form = DrugForm(data=form_data)
-        self.assertTrue(form.is_valid())
+     form = DrugForm(data=form_data)
+     self.assertTrue(form.is_valid())
 
     def test_form_invalid(self):
         """Test if the form is invalid with missing required fields."""
@@ -77,9 +77,9 @@ class DrugViewTest(TestCase):
         self.assertTemplateUsed(response, 'drugs/drug_list.html')  # Check if the correct template is used
 
     def test_drug_list_empty(self):
-        """Test if the drug list view handles empty drug list correctly."""
-        # Delete all drugs
-        Drug.objects.all().delete()
-        response = self.client.get(reverse('drug_list'))
-        self.assertEqual(response.status_code, 200)
-        self.assertContains(response, "No drugs available.")  # Check if the appropriate message is shown
+     """Test if the drug list view handles empty drug list correctly."""
+     # Delete all drugs
+     Drug.objects.all().delete()
+     response = self.client.get(reverse('drug_list'))
+     self.assertEqual(response.status_code, 200)
+     self.assertContains(response, "No drugs available.")  # Now it should pass if the template is correct
