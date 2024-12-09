@@ -1,14 +1,18 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Drug List</title>
-</head>
-<body>
-    <h1>Available Drugs</h1>
-    <ul>
-        {% for drug in drugs %}
-            <li>{{ drug.name }} - ${{ drug.price }} ({{ drug.stock }} in stock)</li>
-        {% endfor %}
-    </ul>
-</body>
-</html>
+{% block content %}
+  <h2>Drugs Available</h2>
+
+  <!-- Display the drug list -->
+  <ul>
+    {% for drug in drugs %}
+      <li>{{ drug.name }} - {{ drug.price }} ({{ drug.quantity }} available)</li>
+    {% endfor %}
+  </ul>
+
+  <!-- Display the form to add a new drug -->
+  <h3>Add a New Drug</h3>
+  <form method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.as_p }}  <!-- Render the form fields -->
+    <button type="submit">Add Drug</button>
+  </form>
+{% endblock %}
