@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Drug List</title>
+</head>
+<body>
+    <h1>Available Drugs</h1>
+    <ul>
+        {% for drug in drugs %}
+            <li>{{ drug.name }} - ${{ drug.price }} ({{ drug.stock }} in stock)</li>
+        {% endfor %}
+    </ul>
+</body>
+</html>
