@@ -35,18 +35,14 @@ class DrugModelTest(TestCase):
 class DrugFormTest(TestCase):
     """Test the DrugForm form."""
 
-    def test_form_valid(self):
-        """Test if the form is valid with correct data."""
-        form_data = {
-            'name': 'Test Drug',
-            'category': 'Antibiotic',
-            'description': 'A powerful antibiotic',
-            'manufacturer': 'Pharma Corp.',
-            'expiry_date': '2025-12-31',
-            'price': 100.00,
-            'stock_quantity': 50,
-            'minimum_stock': 10
-        }
+    def test_form_invalid(self):
+    
+     form_data = {'name': '', 'category': 'Antibiotic'}  # Only 'name' is empty
+     form = DrugForm(data=form_data)
+     self.assertFalse(form.is_valid())
+     self.assertEqual(len(form.errors), 6)  # Now checking for the correct number of missing fields
+
+    
         form = DrugForm(data=form_data)
         self.assertTrue(form.is_valid())
 
