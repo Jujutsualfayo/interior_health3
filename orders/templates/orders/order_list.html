@@ -2,7 +2,12 @@
 {% if orders %}
   <ul>
     {% for order in orders %}
-      <li>{{ order }}</li>
+      <li>
+        Order #{{ order.id }} - {{ order.drug.name }}<br>
+        Quantity: {{ order.quantity }}<br>
+        Total Price: {{ order.total_price }}<br>
+        Ordered by: {{ order.user.username }}
+      </li>
     {% endfor %}
   </ul>
 {% else %}
