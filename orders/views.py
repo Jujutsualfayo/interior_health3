@@ -13,11 +13,11 @@ def place_order(request, drug_id):
         try:
             quantity = int(request.POST.get('quantity', 0))
             if quantity <= 0:
-                messages.error(request, 'Ensure this value is greater than 0.')
+                messages.error(request, 'Quantity must be greater than 0.')
                 return render(request, 'orders/place_order.html', {'drug': drug})
             
             if quantity > drug.stock_quantity:
-                messages.error(request, 'Insufficient stock available.')
+                messages.error(request, 'Not enough stock available.')
                 return render(request, 'orders/place_order.html', {'drug': drug})
             
             total_price = drug.price * quantity
