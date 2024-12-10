@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Details</title>
+</head>
+<body>
+    <h2>Order Details</h2>
+    <p><strong>Order ID:</strong> {{ order.id }}</p>
+    <p><strong>Drug:</strong> {{ order.drug.name }}</p>
+    <p><strong>Quantity:</strong> {{ order.quantity }}</p>
+    <p><strong>Total Price:</strong> ${{ order.total_price }}</p>
+    <p><strong>Status:</strong> {{ order.status }}</p>
+
+    <hr>
+    {% if order.status != 'Cancelled' %}
+        <form method="POST" action="{% url 'orders:cancel_order' order.id %}">
+            {% csrf_token %}
+            <button type="submit" style="background-color: red; color: white; border: none; padding: 10px; cursor: pointer;">
+                Cancel Order
+            </button>
+        </form>
+    {% else %}
+        <p style="color: red;">This order has already been cancelled.</p>
+    {% endif %}
+
+    <a href="{% url 'orders:order_list' %}" style="display: block; margin-top: 20px;">Back to Orders</a>
+</body>
+</html>
