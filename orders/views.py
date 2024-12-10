@@ -5,7 +5,7 @@ from drugs.models import Drug
 
 def order_list(request):
     orders = Order.objects.filter(user=request.user)
-    return render(request, 'orders/order_list.html', {'orders': orders, 'drug': drug})
+    return render(request, 'orders/order_list.html', {'orders': orders})
 
 def place_order(request, drug_id):
     drug = get_object_or_404(Drug, id=drug_id)

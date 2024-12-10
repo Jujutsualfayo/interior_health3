@@ -56,8 +56,8 @@ class OrderTests(TestCase):
         response = self.client.get(reverse('orders:order_list'))
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'orders/order_list.html')
-        self.assertContains(response, f"Order #{self.order.id}")  # Ensure order details appear
-        self.assertContains(response, 'Test Drug')  # Ensure drug name appears
+        self.assertContains(response, f"Order #{self.order.id}")
+        self.assertContains(response, 'Test Drug')
 
     def test_place_order_view(self):
         """Test placing an order through the place order view."""
@@ -78,7 +78,7 @@ class OrderTests(TestCase):
             {'quantity': 100}  # Exceeds available stock
         )
         self.assertEqual(response.status_code, 200)  # Stay on the same page
-        self.assertContains(response, 'Insufficient stock available.')  # Check for the error message
+        self.assertContains(response, 'Not enough stock available.')  # Check for the error message
 
     def test_order_detail_view(self):
         """Test the order detail view displays correctly."""
@@ -94,7 +94,7 @@ class OrderTests(TestCase):
             {'quantity': 0}  # Invalid quantity
         )
         self.assertEqual(response.status_code, 200)
-        self.assertContains(response, 'Ensure this value is greater than 0.')  # Ensure the error message is shown
+        self.assertContains(response, 'Quantity must be greater than 0.')  # Ensure the error message is shown
 
     def test_order_list_view_empty(self):
         """Test the order list view when there are no orders."""
@@ -107,8 +107,8 @@ class OrderTests(TestCase):
         """Test the cancel order functionality."""
         response = self.client.post(reverse('orders:cancel_order', args=[self.order.id]))
         self.assertEqual(response.status_code, 302)  # Should redirect after cancel
-        
-        # Refresh the order and check if it was canceled
+
+        # Re-fetch the order from the database to check if it exists and its status
         self.order.refresh_from_db()
         self.assertEqual(self.order.status, 'CANCELLED')
 
