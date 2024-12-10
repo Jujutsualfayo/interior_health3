@@ -1,7 +1,28 @@
 <h2>Order {{ drug.name }}</h2>
+
+<!-- Displaying messages -->
+{% if messages %}
+  <div class="alert">
+    {% for message in messages %}
+      <p>{{ message }}</p>
+    {% endfor %}
+  </div>
+{% endif %}
+
 <form method="POST">
   {% csrf_token %}
+  
   <label for="quantity">Quantity:</label>
-  <input type="number" id="quantity" name="quantity" min="1" max="{{ drug.stock_quantity }}">
+  <input type="number" id="quantity" name="quantity" min="1" max="{{ drug.stock_quantity }}" value="{{ form.quantity.value|default:'' }}">
+  
+  <!-- Display form errors -->
+  {% if form.quantity.errors %}
+    <ul>
+      {% for error in form.quantity.errors %}
+        <li class="error">{{ error }}</li>
+      {% endfor %}
+    </ul>
+  {% endif %}
+  
   <button type="submit">Place Order</button>
 </form>
