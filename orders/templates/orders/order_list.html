@@ -1,8 +1,10 @@
 <h2>Your Orders</h2>
-<ul>
-  {% for order in orders %}
-    <li>
-      {{ order.drug.name }} - {{ order.quantity }} units - {{ order.status }}
-    </li>
-  {% endfor %}
-</ul>
+{% if orders %}
+  <ul>
+    {% for order in orders %}
+      <li>{{ order }}</li>
+    {% endfor %}
+  </ul>
+{% else %}
+  <p>No orders available.</p>
+{% endif %}
