@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cancel Order</title>
+</head>
+<body>
+    <h2>Cancel Order</h2>
+    <p>Are you sure you want to cancel Order #{{ order.id }}?</p>
+    <p><strong>Drug:</strong> {{ order.drug.name }}</p>
+    <p><strong>Quantity:</strong> {{ order.quantity }}</p>
+    <p><strong>Total Price:</strong> ${{ order.total_price }}</p>
+
+    <form method="POST" action="{% url 'orders:cancel_order' order.id %}">
+        {% csrf_token %}
+        <button type="submit" style="background-color: red; color: white; border: none; padding: 10px; cursor: pointer;">
+            Yes, Cancel Order
+        </button>
+    </form>
+
+    <a href="{% url 'orders:order_detail' order.id %}" style="display: block; margin-top: 20px;">No, Go Back</a>
+</body>
+</html>
