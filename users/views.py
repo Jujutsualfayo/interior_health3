@@ -6,6 +6,7 @@ from django.http import HttpResponse
 from .forms import UserRegistrationForm, UserUpdateForm, ProfileUpdateForm
 from django.contrib import messages
 from django.urls import reverse
+from django.core.exceptions import ObjectDoesNotExist
 
 # Home view
 def home(request):
@@ -17,8 +18,10 @@ def register(request):
         form = UserRegistrationForm(request.POST)
         if form.is_valid():
             user = form.save()
-            # Assign default group or role
-            group = Group.objects.get(name='Patient')  # Ensure this group exists in your DB
+            try:
+                group = Group.objects.get(name='Patient')
+            except ObjectDoesNotExist:
+                group = Group.objects.create(name='Patient')  # Create group if it doesn't exist
             user.groups.add(group)
             messages.success(request, 'Your account has been created! You can now log in.')
             return redirect(reverse('users:login'))
