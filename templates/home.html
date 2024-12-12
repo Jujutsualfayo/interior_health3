@@ -1,4 +1,6 @@
-{% load static %}
+{% extends 'base.html' %}
+
+{% block title %}Home - Interior Health{% endblock %}
 
 {% block content %}
 <div class="home-page">
@@ -6,7 +8,6 @@
   <p>Your gateway to affordable healthcare in the interior region.</p>
 
   <div class="cta">
-    <!-- Updated URLs to include 'users:' namespace -->
     <a href="{% url 'users:register' %}" class="btn">Register</a>
     <a href="{% url 'users:login' %}" class="btn">Login</a>
   </div>
