@@ -120,11 +120,11 @@ USE_TZ = True
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'static'),  # Custom static files for development
-]
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')  # Used for collectstatic in production
 
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'static'),  # Your custom static directory for development
+]
 # Directory for static files in development (ensure this points to where your CSS files are)
 
 
