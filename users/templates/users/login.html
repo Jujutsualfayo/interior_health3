@@ -1,20 +1,33 @@
+{% extends 'base.html' %}
+
+{% block title %}Login - Interior Health{% endblock %}
+
 {% block content %}
+<div class="login-page">
   <h2>Login</h2>
   <p>Enter your credentials to access your account.</p>
 
   {% if messages %}
-    <ul>
+    <ul class="messages">
       {% for message in messages %}
-        <li>{{ message }}</li>
+        <li class="{{ message.tags }}">{{ message }}</li>
       {% endfor %}
     </ul>
   {% endif %}
 
-  <form method="POST">
+  <form method="POST" class="login-form">
       {% csrf_token %}
-      <!-- Form fields for username and password -->
-      <button type="submit">Login</button>
+      <div class="form-group">
+        <label for="username">Username</label>
+        <input type="text" id="username" name="username" required>
+      </div>
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input type="password" id="password" name="password" required>
+      </div>
+      <button type="submit" class="btn">Login</button>
   </form>
 
   <p>Don't have an account? <a href="{% url 'users:register' %}">Create one here</a></p>
+</div>
 {% endblock %}
