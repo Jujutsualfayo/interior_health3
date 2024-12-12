@@ -1,15 +1,28 @@
-<!-- users/templates/users/register.html -->
+{% extends 'base.html' %}
+
+{% block title %}Register - Interior Health{% endblock %}
 
 {% block content %}
+<div class="register-page">
   <h2>Create an Account</h2>
   <p>Please fill out the form to create a new account.</p>
 
+  <!-- Display success or error messages -->
+  {% if messages %}
+    <ul class="messages">
+      {% for message in messages %}
+        <li class="{{ message.tags }}">{{ message }}</li>
+      {% endfor %}
+    </ul>
+  {% endif %}
+
   <!-- Form for user registration -->
-  <form method="POST">
+  <form method="POST" class="register-form">
     {% csrf_token %}
-    {{ form.as_p }} <!-- This will render the form fields -->
-    <button type="submit">Register</button>
+    {{ form.as_p }}
+    <button type="submit" class="btn">Register</button>
   </form>
 
-  <p>Already have an account? <a href="{% url 'users:login' %}">Login here</a></p>
+  <p>Already have an account? <a href="{% url 'users:login' %}" class="login-link">Login here</a></p>
+</div>
 {% endblock %}
