@@ -1,21 +1,36 @@
-<!-- users/templates/users/profile.html -->
+{% extends 'base.html' %}
+
+{% block title %}Profile - Interior Health{% endblock %}
 
 {% block content %}
+<div class="profile-page">
   <h2>Update Your Profile</h2>
 
-  <form method="POST" enctype="multipart/form-data">
+  <!-- Display success or error messages -->
+  {% if messages %}
+    <ul class="messages">
+      {% for message in messages %}
+        <li class="{{ message.tags }}">{{ message }}</li>
+      {% endfor %}
+    </ul>
+  {% endif %}
+
+  <form method="POST" enctype="multipart/form-data" class="profile-form">
     {% csrf_token %}
     
-    <!-- User update form fields -->
-    <h3>Update your personal information:</h3>
-    {{ u_form.as_p }}
+    <fieldset>
+      <legend>Update Personal Information</legend>
+      {{ user_form.as_p }}
+    </fieldset>
 
-    <h3>Update your profile picture:</h3>
-    {{ p_form.as_p }}
+    <fieldset>
+      <legend>Update Profile Picture</legend>
+      {{ profile_form.as_p }}
+    </fieldset>
     
-    <button type="submit">Update Profile</button>
+    <button type="submit" class="btn">Update Profile</button>
   </form>
 
-  <!-- Add a logout link -->
-  <p><a href="{% url 'users:logout' %}">Logout</a></p>
+  <p><a href="{% url 'users:logout' %}" class="logout-link">Logout</a></p>
+</div>
 {% endblock %}
