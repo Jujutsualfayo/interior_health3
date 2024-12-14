@@ -1,0 +1,188 @@
+/* Global styles for orders pages */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #eaf4f4;
+    color: #333;
+    line-height: 1.6;
+  }
+  
+  h2 {
+    color: #2c3e50;
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 2em;
+    font-weight: bold;
+  }
+  
+  p {
+    text-align: center;
+    margin: 10px 0;
+    color: #555;
+    font-size: 1.1em;
+  }
+  
+  a {
+    color: #28a745;
+    text-decoration: none;
+    font-weight: bold;
+  }
+  
+  a:hover {
+    text-decoration: underline;
+    color: #218838;
+  }
+  
+  /* Order page container */
+  .page-container {
+    max-width: 800px;
+    margin: 50px auto;
+    background: #ffffff;
+    padding: 25px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Specific styles for the order list page */
+  .order-list ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  .order-list li {
+    background-color: #f9f9f9;
+    padding: 15px;
+    margin: 10px 0;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  .order-list li:hover {
+    background-color: #eaf4f4;
+  }
+  
+  .order-list .order-details {
+    font-size: 1.1em;
+    margin-top: 10px;
+  }
+  
+  .order-list .order-actions {
+    margin-top: 20px;
+  }
+  
+  .order-list .order-actions a {
+    background-color: #28a745;
+    color: white;
+    padding: 8px 15px;
+    border-radius: 5px;
+    text-decoration: none;
+    font-size: 1em;
+    margin-right: 10px;
+  }
+  
+  .order-list .order-actions a:hover {
+    background-color: #218838;
+  }
+  
+  /* Order detail page */
+  .order-detail .order-details {
+    margin-top: 20px;
+  }
+  
+  .order-detail .cancel-order-btn {
+    background-color: red;
+    color: white;
+    padding: 12px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1.1em;
+    text-align: center;
+    margin-top: 20px;
+  }
+  
+  .order-detail .cancel-order-btn:hover {
+    background-color: darkred;
+  }
+  
+  .order-detail .back-link {
+    margin-top: 20px;
+    display: block;
+    text-align: center;
+    font-size: 1.1em;
+    color: #28a745;
+    font-weight: bold;
+  }
+  
+  .order-detail .back-link:hover {
+    text-decoration: underline;
+    color: #218838;
+  }
+  
+  /* Cancel order page */
+  .cancel-order .confirm-cancel-btn {
+    background-color: red;
+    color: white;
+    padding: 12px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1.1em;
+    text-align: center;
+    margin-top: 20px;
+  }
+  
+  .cancel-order .confirm-cancel-btn:hover {
+    background-color: darkred;
+  }
+  
+  .cancel-order .go-back-link {
+    margin-top: 20px;
+    display: block;
+    text-align: center;
+    font-size: 1.1em;
+    color: #28a745;
+    font-weight: bold;
+  }
+  
+  .cancel-order .go-back-link:hover {
+    text-decoration: underline;
+    color: #218838;
+  }
+  
+  /* Place order page */
+  .place-order .form-control {
+    width: 100%;
+    padding: 12px;
+    margin: 10px 0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 1em;
+  }
+  
+  .place-order .place-order-btn {
+    width: 100%;
+    margin-top: 20px;
+    background-color: #28a745;
+    color: white;
+    padding: 12px;
+    border-radius: 5px;
+    font-size: 1.1em;
+    cursor: pointer;
+  }
+  
+  .place-order .place-order-btn:hover {
+    background-color: #218838;
+  }
+  
+  .place-order .quantity-error {
+    color: red;
+    font-size: 0.9em;
+    text-align: center;
+    margin-top: 10px;
+  }
+  
+  .place-order .quantity-input {
+    max-width: 150px;
+    margin: 0 auto;
+    display: block;
+  }
+  
