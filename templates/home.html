@@ -10,8 +10,9 @@
   <div class="cta">
     <a href="{% url 'users:register' %}" class="btn">Register</a>
     <a href="{% url 'users:login' %}" class="btn">Login</a>
-
+    
+    <!-- Link to the order list page -->
+    <a href="{% url 'orders:order_list' %}" class="btn">Your Orders</a>
   </div>
 </div>
 {% endblock %}
-
