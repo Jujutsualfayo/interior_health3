@@ -1,5 +1,8 @@
 <h2>Your Orders</h2>
 
+<!-- Link to navigate to the orders list page -->
+<a href="{% url 'orders:order_list' %}">Back to Orders List</a>
+
 {% if orders %}
   <ul>
     {% for order in orders %}
@@ -8,7 +11,6 @@
         Quantity: {{ order.quantity }}<br>
         Total Price: {{ order.total_price }}<br>
         Ordered by: {{ order.user.username }}<br>
-        <!-- Optionally add a status if your Order model supports it -->
         {% if order.status %}
           Status: {{ order.status }}<br>
         {% endif %}
