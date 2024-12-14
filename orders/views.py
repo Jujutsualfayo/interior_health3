@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from .models import Order
 from drugs.models import Drug
+from django.contrib.auth.decorators import login_required
 
 def order_list(request):
     if not request.user.is_authenticated:  # Ensure the user is logged in
@@ -9,6 +10,11 @@ def order_list(request):
         return redirect('users:login')
     orders = Order.objects.filter(user=request.user)
     return render(request, 'orders/order_list.html', {'orders': orders})
+
+def order_list(request):
+    orders = Order.objects.filter(user=request.user)
+    return render(request, 'orders/order_list.html', {'orders': orders})
+
 
 def place_order(request, drug_id):
     drug = get_object_or_404(Drug, id=drug_id)
