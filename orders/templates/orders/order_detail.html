@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Order Details</title>
+    <title>{% block title %}Order Details{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
 </head>
 <body>
     <h2>Order Details</h2>
@@ -14,17 +15,26 @@
     <p><strong>Status:</strong> {{ order.status }}</p>
 
     <hr>
+
     {% if order.status != 'Cancelled' %}
         <form method="POST" action="{% url 'orders:cancel_order' order.id %}">
             {% csrf_token %}
-            <button type="submit" style="background-color: red; color: white; border: none; padding: 10px; cursor: pointer;">
+            <button type="submit" class="btn-cancel">
                 Cancel Order
             </button>
         </form>
     {% else %}
-        <p style="color: red;">This order has already been cancelled.</p>
+        <p class="text-danger">This order has already been cancelled.</p>
     {% endif %}
 
-    <a href="{% url 'orders:order_list' %}" style="display: block; margin-top: 20px;">Back to Orders</a>
+    <a href="{% url 'orders:order_list' %}" class="btn-back">Back to Orders</a>
+
+    {% if messages %}
+      <div class="messages">
+        {% for message in messages %}
+          <p>{{ message }}</p>
+        {% endfor %}
+      </div>
+    {% endif %}
 </body>
 </html>
