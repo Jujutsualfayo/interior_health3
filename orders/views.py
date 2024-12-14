@@ -4,6 +4,9 @@ from .models import Order
 from drugs.models import Drug
 
 def order_list(request):
+    if not request.user.is_authenticated:  # Ensure the user is logged in
+        messages.error(request, "You need to be logged in to view orders.")
+        return redirect('users:login')
     orders = Order.objects.filter(user=request.user)
     return render(request, 'orders/order_list.html', {'orders': orders})
 
@@ -39,10 +42,16 @@ def place_order(request, drug_id):
     return render(request, 'orders/place_order.html', {'drug': drug})
 
 def order_detail(request, pk):
+    if not request.user.is_authenticated:  # Ensure the user is logged in
+        messages.error(request, "You need to be logged in to view order details.")
+        return redirect('users:login')
     order = get_object_or_404(Order, id=pk, user=request.user)
     return render(request, 'orders/order_detail.html', {'order': order})
 
 def cancel_order(request, pk):
+    if not request.user.is_authenticated:  # Ensure the user is logged in
+        messages.error(request, "You need to be logged in to cancel an order.")
+        return redirect('users:login')
     order = get_object_or_404(Order, id=pk, user=request.user)
     if request.method == 'POST':
         # Optional: Add logic to refund or restock items
@@ -50,3 +59,4 @@ def cancel_order(request, pk):
         messages.success(request, 'Order canceled successfully.')
         return redirect('orders:order_list')
     return render(request, 'orders/cancel_order.html', {'order': order})
+
