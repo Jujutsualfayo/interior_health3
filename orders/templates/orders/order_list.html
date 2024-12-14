@@ -1,12 +1,17 @@
 <h2>Your Orders</h2>
+
 {% if orders %}
   <ul>
     {% for order in orders %}
       <li>
-        Order #{{ order.id }} - {{ order.drug.name }}<br>
+        Order #{{ order.id }} - <a href="{% url 'orders:order_detail' order.id %}">{{ order.drug.name }}</a><br>
         Quantity: {{ order.quantity }}<br>
         Total Price: {{ order.total_price }}<br>
-        Ordered by: {{ order.user.username }}
+        Ordered by: {{ order.user.username }}<br>
+        <!-- Optionally add a status if your Order model supports it -->
+        {% if order.status %}
+          Status: {{ order.status }}<br>
+        {% endif %}
       </li>
     {% endfor %}
   </ul>
