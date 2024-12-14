@@ -10,7 +10,7 @@ from django.core.exceptions import ObjectDoesNotExist
 
 # Home view
 def home(request):
-    return render(request, 'home.html')  # Now rendering the global home.html template
+    return render(request, 'users/home.html')
 
 # User registration view
 def register(request):
@@ -18,13 +18,10 @@ def register(request):
         form = UserRegistrationForm(request.POST)
         if form.is_valid():
             user = form.save()
-            try:
-                group = Group.objects.get(name='Patient')
-            except ObjectDoesNotExist:
-                group = Group.objects.create(name='Patient')  # Create group if it doesn't exist
+            group, created = Group.objects.get_or_create(name='Patient')
             user.groups.add(group)
             messages.success(request, 'Your account has been created! You can now log in.')
-            return redirect(reverse('users:login'))
+            return redirect('users:login')
     else:
         form = UserRegistrationForm()
     return render(request, 'users/register.html', {'form': form})
@@ -35,26 +32,24 @@ def user_login(request):
         username = request.POST.get('username')
         password = request.POST.get('password')
         user = authenticate(request, username=username, password=password)
-        if user is not None:
+        if user:
             login(request, user)
-            return redirect('home')  # Ensure 'home' exists in your URL patterns
+            return redirect('users:home')
         else:
             messages.error(request, 'Invalid username or password.')
-            return render(request, 'users/login.html', status=401)  # Explicitly set status for invalid login
     return render(request, 'users/login.html')
-
 
 # User logout view
 def user_logout(request):
     logout(request)
-    return redirect('users:login')  # Use 'users:login' here
+    return redirect('users:login')
 
 # Profile view
 @login_required
 def profile(request):
     if request.method == 'POST':
         user_form = UserUpdateForm(request.POST, instance=request.user)
-        profile_form = ProfileUpdateForm(request.POST, instance=request.user)
+        profile_form = ProfileUpdateForm(request.POST, instance=request.user.profile)
         if user_form.is_valid() and profile_form.is_valid():
             user_form.save()
             profile_form.save()
@@ -62,22 +57,19 @@ def profile(request):
             return redirect('users:profile')
     else:
         user_form = UserUpdateForm(instance=request.user)
-        profile_form = ProfileUpdateForm(instance=request.user)
+        profile_form = ProfileUpdateForm(instance=request.user.profile)
 
-    context = {
-        'user_form': user_form,
-        'profile_form': profile_form
-    }
-    return render(request, 'users/profile.html', context)
+    return render(request, 'users/profile.html', {'user_form': user_form, 'profile_form': profile_form})
 
-# Role-specific dashboard view
+# Dashboard view
 @login_required
 def dashboard(request):
-    if request.user.role == 'admin':
+    if request.user.groups.filter(name='Admin').exists():
         return render(request, 'users/admin_dashboard.html')
-    elif request.user.role == 'health_worker':
+    elif request.user.groups.filter(name='Health Worker').exists():
         return render(request, 'users/health_worker_dashboard.html')
-    elif request.user.role == 'patient':
+    elif request.user.groups.filter(name='Patient').exists():
         return render(request, 'users/patient_dashboard.html')
     else:
         return HttpResponse('Role not recognized.')
+
