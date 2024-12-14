@@ -11,9 +11,6 @@ def order_list(request):
     orders = Order.objects.filter(user=request.user)
     return render(request, 'orders/order_list.html', {'orders': orders})
 
-def order_list(request):
-    orders = Order.objects.filter(user=request.user)
-    return render(request, 'orders/order_list.html', {'orders': orders})
 
 
 def place_order(request, drug_id):
