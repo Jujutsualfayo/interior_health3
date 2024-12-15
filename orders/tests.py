@@ -94,7 +94,8 @@ class OrderTests(TestCase):
             {'quantity': 0}  # Invalid quantity
         )
         self.assertEqual(response.status_code, 200)
-        self.assertContains(response, 'Ensure this value is greater than 0.')  # Ensure the error message is shown
+        self.assertContains(response, 'Quantity must be greater than 0.')
+
 
     def test_order_list_view_empty(self):
         """Test the order list view when there are no orders."""
