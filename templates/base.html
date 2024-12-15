@@ -5,7 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>{% block title %}Interior Health{% endblock %}</title>
   {% load static %}
+  
+  <!-- Ensure the favicon.ico is placed correctly in the static folder -->
   <link rel="icon" href="{% static 'favicon.ico' %}" type="image/x-icon">
+  
+  <!-- Link to the main stylesheet -->
   <link rel="stylesheet" href="{% static 'css/styles.css' %}">
 </head>
 <body>
