@@ -78,7 +78,7 @@ class OrderTests(TestCase):
             {'quantity': 100}  # Exceeds available stock
         )
         self.assertEqual(response.status_code, 200)  # Stay on the same page
-        self.assertContains(response, 'Insufficient stock available.')  # Check for the error message
+        self.assertContains(response, 'Insufficient stock.')
 
     def test_order_detail_view(self):
         """Test the order detail view displays correctly."""
