@@ -24,6 +24,9 @@ CSRF_TRUSTED_ORIGINS = [
 # Define the custom User model
 AUTH_USER_MODEL = "users.User"
 
+# Set the login URL
+LOGIN_URL = 'users:login'
+
 # Application definition
 INSTALLED_APPS = [
     "django.contrib.admin",
@@ -64,7 +67,6 @@ TEMPLATES = [
         },
     },
 ]
-
 
 WSGI_APPLICATION = "interior_health3.wsgi.application"
 
