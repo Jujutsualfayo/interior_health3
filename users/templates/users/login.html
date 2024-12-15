@@ -7,6 +7,12 @@
   <h2>Login</h2>
   <p>Enter your credentials to access your account.</p>
 
+  {% if error %}
+    <div class="error" style="color: red; margin-bottom: 10px;">
+      {{ error }}
+    </div>
+  {% endif %}
+
   {% if messages %}
     <ul class="messages">
       {% for message in messages %}
