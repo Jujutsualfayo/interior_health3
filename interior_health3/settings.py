@@ -52,9 +52,7 @@ ROOT_URLCONF = "interior_health3.urls"
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [
-            BASE_DIR / 'templates',  # Global templates directory
-        ],
+        'DIRS': [BASE_DIR / 'templates'],  # Points to your global templates folder
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -66,6 +64,7 @@ TEMPLATES = [
         },
     },
 ]
+
 
 WSGI_APPLICATION = "interior_health3.wsgi.application"
 
