@@ -1,3 +1,5 @@
+{% extends 'base.html' %}
+
 {% block content %}
   <h2>Drugs Available</h2>
 
@@ -19,4 +21,8 @@
     {{ form.as_p }}  <!-- Render the form fields -->
     <button type="submit">Add Drug</button>
   </form>
+{% endblock %}
+
+{% block extra_css %}
+  <link rel="stylesheet" href="{% static 'css/drugs.css' %}">
 {% endblock %}
