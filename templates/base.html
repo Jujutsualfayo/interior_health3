@@ -11,6 +11,9 @@
   
   <!-- Link to the main stylesheet -->
   <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+  
+  <!-- Block for additional stylesheets specific to certain pages (like drugs.css) -->
+  {% block extra_css %}{% endblock %}
 </head>
 <body>
   <header>
