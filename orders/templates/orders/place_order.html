@@ -8,33 +8,46 @@
     <link rel="stylesheet" href="{% static 'css/orders.css' %}">
 </head>
 <body>
-    <h2>Order {{ drug.name }}</h2>
+    <h1>Place an Order</h1>
 
     <!-- Displaying messages -->
     {% if messages %}
       <div class="alert">
         {% for message in messages %}
-          <p>{{ message }}</p>
+          <p class="message {{ message.tags }}">{{ message }}</p>
         {% endfor %}
       </div>
     {% endif %}
 
     <form method="POST">
-      {% csrf_token %}
-      
-      <label for="quantity">Quantity:</label>
-      <input type="number" id="quantity" name="quantity" min="1" max="{{ drug.stock_quantity }}" value="{{ form.quantity.value|default:'' }}">
-      
-      <!-- Display form errors -->
-      {% if form.quantity.errors %}
-        <ul class="form-errors">
-          {% for error in form.quantity.errors %}
-            <li>{{ error }}</li>
-          {% endfor %}
-        </ul>
-      {% endif %}
-      
-      <button type="submit" class="btn-submit">Place Order</button>
+        {% csrf_token %}
+
+        <!-- Select drug if no specific drug is pre-selected -->
+        {% if not drug %}
+          <label for="drug">Select Drug:</label>
+          <select id="drug" name="drug" required>
+            <option value="">-- Select a drug --</option>
+            {% for d in drugs %}
+              <option value="{{ d.id }}">{{ d.name }} - ${{ d.price }} ({{ d.stock_quantity }} in stock)</option>
+            {% endfor %}
+          </select>
+          <br><br>
+        {% else %}
+          <p>Ordering: <strong>{{ drug.name }}</strong></p>
+        {% endif %}
+
+        <!-- Input for quantity -->
+        <label for="quantity">Quantity:</label>
+        <input 
+          type="number" 
+          id="quantity" 
+          name="quantity" 
+          min="1" 
+          max="{{ drug.stock_quantity|default:drugs.0.stock_quantity }}" 
+          required>
+        <br><br>
+
+        <button type="submit" class="btn-submit">Place Order</button>
     </form>
 </body>
 </html>
