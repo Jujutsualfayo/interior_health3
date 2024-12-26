@@ -62,7 +62,7 @@ class OrderTests(TestCase):
     def test_place_order_view(self):
         """Test placing an order through the place order view."""
         response = self.client.post(
-            reverse('orders:place_order', args=[self.drug.id]),
+            reverse('orders:place_order_with_drug', args=[self.drug.id]),  # Updated URL
             {'quantity': 3}
         )
         self.assertEqual(response.status_code, 302)  # Redirect on success
@@ -74,7 +74,7 @@ class OrderTests(TestCase):
     def test_place_order_insufficient_stock(self):
         """Test placing an order when stock is insufficient."""
         response = self.client.post(
-            reverse('orders:place_order', args=[self.drug.id]),
+            reverse('orders:place_order_with_drug', args=[self.drug.id]),  # Updated URL
             {'quantity': 100}  # Exceeds available stock
         )
         self.assertEqual(response.status_code, 200)  # Stay on the same page
@@ -90,12 +90,11 @@ class OrderTests(TestCase):
     def test_place_order_invalid_quantity(self):
         """Test placing an order with invalid quantity."""
         response = self.client.post(
-            reverse('orders:place_order', args=[self.drug.id]),
+            reverse('orders:place_order_with_drug', args=[self.drug.id]),  # Updated URL
             {'quantity': 0}  # Invalid quantity
         )
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, 'Quantity must be greater than 0.')
-
 
     def test_order_list_view_empty(self):
         """Test the order list view when there are no orders."""
