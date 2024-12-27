@@ -63,18 +63,20 @@ def place_order(request, drug_id=None):
 
 @login_required
 @transaction.atomic
+@login_required
+@transaction.atomic
 def cancel_order(request, pk):
     order = get_object_or_404(Order, id=pk, user=request.user)
     if request.method == 'POST':
         drug = order.drug
-
+        
         # Log the stock value before canceling
         logger.debug(f"Stock before cancel: {drug.stock_quantity}")
 
         if order.status != 'CANCELED':
-            # Add back the quantity to the stock
-            drug.stock_quantity += order.quantity
-            drug.save()
+            # Instead of adding the quantity back, we do nothing if canceling
+            # The stock was already updated during order placement (when it was reduced).
+            pass
 
         # Update the order's status to 'CANCELED'
         order.status = 'CANCELED'
@@ -87,6 +89,7 @@ def cancel_order(request, pk):
         return redirect('orders:order_list')
 
     return render(request, 'orders/cancel_order.html', {'order': order})
+
 
 @login_required
 def order_detail(request, pk):
