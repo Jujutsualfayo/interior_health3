@@ -42,8 +42,6 @@ def place_order(request, drug_id=None):
     drugs = Drug.objects.filter(stock_quantity__gt=0)
     return render(request, 'orders/place_order.html', {'drug': drug, 'drugs': drugs})
 
-
-
 @login_required
 def cancel_order(request, pk):
     order = get_object_or_404(Order, id=pk, user=request.user)
@@ -58,3 +56,9 @@ def cancel_order(request, pk):
         messages.success(request, 'Order canceled successfully.')
         return redirect('orders:order_list')
     return render(request, 'orders/cancel_order.html', {'order': order})
+
+@login_required
+def order_detail(request, pk):
+    """View to display details of a specific order."""
+    order = get_object_or_404(Order, id=pk, user=request.user)
+    return render(request, 'orders/order_detail.html', {'order': order})
