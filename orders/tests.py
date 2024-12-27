@@ -108,8 +108,9 @@ class OrderTests(TestCase):
         response = self.client.post(reverse('orders:cancel_order', args=[self.order.id]))
         self.assertEqual(response.status_code, 302)  # Should redirect after cancel
 
-        # Confirm the order no longer exists
-        self.assertFalse(Order.objects.filter(id=self.order.id).exists())
+        # Confirm the order is canceled (status should be 'CANCELED')
+        self.order.refresh_from_db()  # Reload the order from the database
+        self.assertEqual(self.order.status, 'CANCELED')  # Ensure the status is updated to 'CANCELED'
 
         # Check stock has been refunded
         self.drug.refresh_from_db()
