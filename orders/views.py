@@ -48,13 +48,19 @@ def cancel_order(request, pk):
     if request.method == 'POST':
         drug = order.drug
         if order.status != 'CANCELED':
+            # Add back the quantity to the stock
             drug.stock_quantity += order.quantity
             drug.save()
-        order.delete()  # Delete the order instead of just updating the status
+
+        # Update the order's status to 'CANCELED' instead of deleting it
+        order.status = 'CANCELED'
+        order.save()
 
         messages.success(request, 'Order canceled successfully.')
         return redirect('orders:order_list')
+
     return render(request, 'orders/cancel_order.html', {'order': order})
+
 
 
 @login_required
