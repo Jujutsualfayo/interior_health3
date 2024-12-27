@@ -104,23 +104,23 @@ class OrderTests(TestCase):
         self.assertContains(response, 'No orders available.')
 
     def test_cancel_order_view(self):
-       """Test the cancel order functionality."""
-       # Record the initial stock quantity before canceling the order
-       initial_stock = self.drug.stock_quantity
-       print(f"Initial stock before cancel: {initial_stock}")
+        """Test the cancel order functionality."""
+        # Record the initial stock quantity before canceling the order
+        initial_stock = self.drug.stock_quantity
+        print(f"Initial stock before cancel: {initial_stock}")
 
-       # Cancel the order
-       response = self.client.post(reverse('orders:cancel_order', args=[self.order.id]))
+        # Cancel the order
+        response = self.client.post(reverse('orders:cancel_order', args=[self.order.id]))
 
-       # Reload the order and drug after canceling
-       self.order.refresh_from_db()
-       self.drug.refresh_from_db()
+        # Reload the order and drug after canceling
+        self.order.refresh_from_db()
+        self.drug.refresh_from_db()
 
-       # Print the stock after canceling
-       print(f"Stock after cancel: {self.drug.stock_quantity}")
+        # Print the stock after canceling
+        print(f"Stock after cancel: {self.drug.stock_quantity}")
 
-       # Ensure the order was successfully canceled (status should be 'CANCELED')
-       self.assertEqual(self.order.status, 'CANCELED')
+        # Ensure the order was successfully canceled (status should be 'CANCELED')
+        self.assertEqual(self.order.status, 'CANCELED')
 
-       # Ensure the stock has been correctly refunded
-       self.assertEqual(self.drug.stock_quantity, initial_stock)  # Stock should be restored to the original value
+        # Ensure the stock has been correctly refunded
+        self.assertEqual(self.drug.stock_quantity, initial_stock)  # Stock should be restored to the original value
