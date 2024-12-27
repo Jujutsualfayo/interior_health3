@@ -4,6 +4,25 @@ from .models import Order
 from drugs.models import Drug
 from django.contrib.auth.decorators import login_required
 from django.db import transaction
+import logging
+
+# Create a logger object
+logger = logging.getLogger(__name__)
+
+# Set the logging level
+logger.setLevel(logging.DEBUG)
+
+# Create a console handler and set level to debug
+ch = logging.StreamHandler()
+ch.setLevel(logging.DEBUG)
+
+# Create a formatter and add it to the handler
+formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
+ch.setFormatter(formatter)
+
+# Add the handler to the logger
+logger.addHandler(ch)
+
 
 @login_required
 def order_list(request):
@@ -48,22 +67,26 @@ def cancel_order(request, pk):
     order = get_object_or_404(Order, id=pk, user=request.user)
     if request.method == 'POST':
         drug = order.drug
+
+        # Log the stock value before canceling
+        logger.debug(f"Stock before cancel: {drug.stock_quantity}")
+
         if order.status != 'CANCELED':
             # Add back the quantity to the stock
             drug.stock_quantity += order.quantity
             drug.save()
 
-        # Update the order's status to 'CANCELED' instead of deleting it
+        # Update the order's status to 'CANCELED'
         order.status = 'CANCELED'
         order.save()
+
+        # Log the stock value after canceling
+        logger.debug(f"Stock after cancel: {drug.stock_quantity}")
 
         messages.success(request, 'Order canceled successfully.')
         return redirect('orders:order_list')
 
     return render(request, 'orders/cancel_order.html', {'order': order})
-
-
-
 
 @login_required
 def order_detail(request, pk):
