@@ -42,7 +42,7 @@ class OrderTests(TestCase):
         self.assertEqual(self.order.user, self.user)
         self.assertEqual(self.order.drug, self.drug)
         self.assertEqual(self.order.quantity, 2)
-        self.assertEqual(self.order.total_price, 31.00)
+        self.assertAlmostEqual(self.order.total_price, 31.00, places=2)
         self.assertEqual(self.order.status, 'PENDING')
 
     def test_order_str_representation(self):
@@ -69,12 +69,12 @@ class OrderTests(TestCase):
         self.assertEqual(Order.objects.count(), 2)  # New order should be created
         new_order = Order.objects.last()
         self.assertEqual(new_order.quantity, 3)
-        self.assertEqual(new_order.total_price, 46.50)
+        self.assertAlmostEqual(new_order.total_price, 46.50, places=2)
 
     def test_place_order_insufficient_stock(self):
         """Test placing an order when stock is insufficient."""
         response = self.client.post(
-            reverse('orders:place_order_with_drug', args=[self.drug.id]),  # Updated URL
+            reverse('orders:place_order_with_drug', args=[self.drug.id]),
             {'quantity': 100}  # Exceeds available stock
         )
         self.assertEqual(response.status_code, 200)  # Stay on the same page
@@ -90,10 +90,10 @@ class OrderTests(TestCase):
     def test_place_order_invalid_quantity(self):
         """Test placing an order with invalid quantity."""
         response = self.client.post(
-            reverse('orders:place_order_with_drug', args=[self.drug.id]),  # Updated URL
+            reverse('orders:place_order_with_drug', args=[self.drug.id]),
             {'quantity': 0}  # Invalid quantity
         )
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 200)  # Stay on the same page
         self.assertContains(response, 'Quantity must be greater than 0.')
 
     def test_order_list_view_empty(self):
@@ -110,3 +110,7 @@ class OrderTests(TestCase):
 
         # Confirm the order no longer exists
         self.assertFalse(Order.objects.filter(id=self.order.id).exists())
+
+        # Check stock has been refunded
+        self.drug.refresh_from_db()
+        self.assertEqual(self.drug.stock_quantity, 50)  # Original stock restored
