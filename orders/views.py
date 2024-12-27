@@ -43,6 +43,7 @@ def place_order(request, drug_id=None):
     return render(request, 'orders/place_order.html', {'drug': drug, 'drugs': drugs})
 
 @login_required
+@transaction.atomic
 def cancel_order(request, pk):
     order = get_object_or_404(Order, id=pk, user=request.user)
     if request.method == 'POST':
@@ -60,6 +61,7 @@ def cancel_order(request, pk):
         return redirect('orders:order_list')
 
     return render(request, 'orders/cancel_order.html', {'order': order})
+
 
 
 
