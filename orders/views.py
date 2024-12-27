@@ -31,8 +31,10 @@ def place_order(request, drug_id=None):
         # Validate quantity
         if quantity <= 0:
             messages.error(request, 'Quantity must be greater than 0.')
+            return render(request, 'orders/place_order.html', {'drug': drug})
         elif quantity > drug.stock_quantity:
             messages.error(request, 'Insufficient stock.')
+            return render(request, 'orders/place_order.html', {'drug': drug})
         else:
             # Calculate total price and create the order
             total_price = drug.price * quantity
@@ -52,6 +54,7 @@ def place_order(request, drug_id=None):
     drugs = Drug.objects.filter(stock_quantity__gt=0)
     return render(request, 'orders/place_order.html', {'drug': drug, 'drugs': drugs})
 
+
 @login_required
 def order_detail(request, pk):
     """View to display details of a specific order."""
@@ -63,7 +66,7 @@ def cancel_order(request, pk):
     """View to cancel an order."""
     order = get_object_or_404(Order, id=pk, user=request.user)
     if request.method == 'POST':
-        # Refund stock quantity
+        # Refund stock quantity only if it hasn't been refunded already
         drug = order.drug
         drug.stock_quantity += order.quantity
         drug.save()
@@ -72,3 +75,4 @@ def cancel_order(request, pk):
         messages.success(request, 'Order canceled successfully.')
         return redirect('orders:order_list')
     return render(request, 'orders/cancel_order.html', {'order': order})
+
