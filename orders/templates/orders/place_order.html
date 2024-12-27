@@ -28,7 +28,9 @@
           <select id="drug" name="drug" required>
             <option value="">-- Select a drug --</option>
             {% for d in drugs %}
-              <option value="{{ d.id }}">{{ d.name }} - ${{ d.price }} ({{ d.stock_quantity }} in stock)</option>
+              <option value="{{ d.id }}" {% if d.id == drug.id %}selected{% endif %}>
+                {{ d.name }} - ${{ d.price }} ({{ d.stock_quantity }} in stock)
+              </option>
             {% endfor %}
           </select>
           <br><br>
@@ -43,11 +45,16 @@
           id="quantity" 
           name="quantity" 
           min="1" 
-          max="{{ drug.stock_quantity|default:drugs.0.stock_quantity }}" 
+          max="{{ drug.stock_quantity|default:0 }}" 
+          value="1" 
           required>
         <br><br>
 
+        <!-- Submit Button -->
         <button type="submit" class="btn-submit">Place Order</button>
     </form>
+
+    <br>
+    <a href="{% url 'orders:order_list' %}">Back to Orders List</a>
 </body>
 </html>
