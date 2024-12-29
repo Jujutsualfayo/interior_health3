@@ -1,0 +1,17 @@
+<!-- orders/templates/orders/order_history.html -->
+<h2>Your Orders</h2>
+
+{% if orders %}
+    <ul>
+    {% for order in orders %}
+        <li>
+            Order #{{ order.id }} - {{ order.drug.name }} ({{ order.quantity }})<br>
+            Total Price: {{ order.total_price }}<br>
+            Status: {{ order.status }}<br>
+            Ordered on: {{ order.created_at }}<br>
+        </li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>You have no orders.</p>
+{% endif %}

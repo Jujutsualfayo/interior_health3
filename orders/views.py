@@ -96,3 +96,11 @@ def order_detail(request, pk):
     """View to display details of a specific order."""
     order = get_object_or_404(Order, id=pk, user=request.user)
     return render(request, 'orders/order_detail.html', {'order': order})
+
+# orders/views.py
+
+@login_required
+def order_history(request):
+    orders = Order.objects.filter(user=request.user)
+    return render(request, 'orders/order_history.html', {'orders': orders})
+
