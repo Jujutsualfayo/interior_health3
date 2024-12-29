@@ -12,7 +12,8 @@ class Order(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"Order #{self.id} - {self.drug.name} x {self.quantity}"
+        return f"Order #{self.id} by {self.user.username}"
+
 
     def save(self, *args, **kwargs):
         self.total_price = self.quantity * self.drug.price  # Assuming Drug has a 'price' field
