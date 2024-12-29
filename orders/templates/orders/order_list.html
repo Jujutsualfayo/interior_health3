@@ -1,22 +1,37 @@
-<h2>Your Orders</h2>
+{% load static %}
 
-<!-- Link to navigate to the orders list page -->
-<a href="{% url 'orders:order_list' %}">Back to Orders List</a>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Orders</title>
+    <link rel="stylesheet" href="{% static 'css/orders.css' %}">
+</head>
+<body>
 
-{% if orders %}
-  <ul>
-    {% for order in orders %}
-      <li>
-        Order #{{ order.id }} - <a href="{% url 'orders:order_detail' order.id %}">{{ order.drug.name }}</a><br>
-        Quantity: {{ order.quantity }}<br>
-        Total Price: {{ order.total_price }}<br>
-        Ordered by: {{ order.user.username }}<br>
-        {% if order.status %}
-          Status: {{ order.status }}<br>
-        {% endif %}
-      </li>
-    {% endfor %}
-  </ul>
-{% else %}
-  <p>No orders available.</p>
-{% endif %}
+    <h2>Your Orders</h2>
+
+    <!-- Link to navigate to the orders list page -->
+    <a href="{% url 'orders:order_list' %}">Back to Orders List</a>
+
+    {% if orders %}
+        <ul>
+            {% for order in orders %}
+                <li>
+                    Order #{{ order.id }} - <a href="{% url 'orders:order_detail' order.id %}">{{ order.drug.name }}</a><br>
+                    Quantity: {{ order.quantity }}<br>
+                    Total Price: {{ order.total_price }}<br>
+                    Ordered by: {{ order.user.username }}<br>
+                    {% if order.status %}
+                        Status: {{ order.status }}<br>
+                    {% endif %}
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>No orders available.</p>
+    {% endif %}
+
+</body>
+</html>
