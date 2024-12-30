@@ -11,7 +11,7 @@
         <li>
           {{ drug.name }} - ${{ drug.price }} ({{ drug.stock_quantity }} available)
           <!-- Add the link to place an order for this drug -->
-          <a href="{% url 'orders:place_order' drug.id %}">Place Order</a>
+          <a href="{% url 'orders:place_order_with_drug' drug.id %}">Place Order</a>
         </li>
       {% endfor %}
     </ul>
