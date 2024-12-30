@@ -8,7 +8,11 @@
   {% if drugs %}
     <ul>
       {% for drug in drugs %}
-        <li>{{ drug.name }} - {{ drug.price }} ({{ drug.stock_quantity }} available)</li>
+        <li>
+          {{ drug.name }} - ${{ drug.price }} ({{ drug.stock_quantity }} available)
+          <!-- Add the link to place an order for this drug -->
+          <a href="{% url 'orders:place_order' drug.id %}">Place Order</a>
+        </li>
       {% endfor %}
     </ul>
   {% else %}
