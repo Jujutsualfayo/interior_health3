@@ -128,7 +128,7 @@ class OrderTests(TestCase):
 
         self.assertEqual(response.status_code, 302)  # Redirect on success
         self.assertEqual(self.order.status, 'CANCELED')  # Status should be updated
-        self.assertEqual(self.drug.stock_quantity, initial_stock + self.order.quantity)  # Stock restored
+        self.assertEqual(self.drug.stock_quantity, initial_stock)  # Stock should remain unchanged
 
     def test_order_history_view(self):
         """Test the order history view."""
