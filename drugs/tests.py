@@ -81,7 +81,11 @@ class DrugViewTest(TestCase):
         """Test if the drug list view handles empty drug list correctly."""
         # Delete all drugs
         Drug.objects.all().delete()
-        response = self.client.get(reverse('drugs:drug_list'))  # Use the correct namespace
+        
+        # Ensure the URL is correctly reversed to 'drugs:drug_list'
+        response = self.client.get(reverse('drugs:drug_list'))  
+        
+        # Test for the correct status code and the message indicating no drugs available
         self.assertEqual(response.status_code, 200)
-        self.assertContains(response, "No drugs available.")  # Now it should pass if the template is correct
+        self.assertContains(response, "No drugs available.")  # This should pass if the template is correct
 
