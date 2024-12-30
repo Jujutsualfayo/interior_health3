@@ -1,4 +1,3 @@
-# drugs/tests.py
 from django.test import TestCase
 from django.urls import reverse
 from .models import Drug
@@ -36,23 +35,14 @@ class DrugFormTest(TestCase):
     """Test the DrugForm form."""
 
     def test_form_invalid(self):
-    
-     form_data = {'name': '', 'category': 'Antibiotic'}  # Only 'name' is empty
-     form = DrugForm(data=form_data)
-     self.assertFalse(form.is_valid())
-     self.assertEqual(len(form.errors), 6)  # Now checking for the correct number of missing fields
+        form_data = {'name': '', 'category': 'Antibiotic'}  # Only 'name' is empty
+        form = DrugForm(data=form_data)
+        self.assertFalse(form.is_valid())
+        self.assertEqual(len(form.errors), 6)  # Now checking for the correct number of missing fields
 
-    
-     form = DrugForm(data=form_data)
-     self.assertTrue(form.is_valid())
-
-    from django.test import TestCase
-from .forms import DrugForm
-
-class DrugFormTest(TestCase):
-    def test_form_invalid(self):
-        # Create a form with missing required fields (only missing the 'name' field)
-        data = {
+    def test_form_valid(self):
+        form_data = {
+            'name': 'Test Drug',
             'category': 'Painkiller',
             'description': 'Used to relieve pain.',
             'manufacturer': 'PharmaCorp',
@@ -61,10 +51,8 @@ class DrugFormTest(TestCase):
             'stock_quantity': 100,
             'minimum_stock': 10,
         }
-        form = DrugForm(data)
-        self.assertFalse(form.is_valid())  # Form should be invalid
-        self.assertEqual(len(form.errors), 1)  # Expecting only 1 error for the 'name' field
-
+        form = DrugForm(data=form_data)
+        self.assertTrue(form.is_valid())  # Form should be valid
 
 class DrugViewTest(TestCase):
     """Test the views in the drugs app."""
@@ -90,9 +78,10 @@ class DrugViewTest(TestCase):
         self.assertTemplateUsed(response, 'drugs/drug_list.html')  # Check if the correct template is used
 
     def test_drug_list_empty(self):
-     """Test if the drug list view handles empty drug list correctly."""
-     # Delete all drugs
-     Drug.objects.all().delete()
-     response = self.client.get(reverse('drug_list'))
-     self.assertEqual(response.status_code, 200)
-     self.assertContains(response, "No drugs available.")  # Now it should pass if the template is correct
+        """Test if the drug list view handles empty drug list correctly."""
+        # Delete all drugs
+        Drug.objects.all().delete()
+        response = self.client.get(reverse('drugs:drug_list'))  # Use the correct namespace
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "No drugs available.")  # Now it should pass if the template is correct
+
