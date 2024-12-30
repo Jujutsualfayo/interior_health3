@@ -1,106 +1,138 @@
-from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib import messages
-from .models import Order
+from django.test import TestCase
+from django.urls import reverse
+from django.contrib.auth import get_user_model
 from drugs.models import Drug
-from django.contrib.auth.decorators import login_required
-from django.db import transaction
-import logging
-
-# Create a logger object
-logger = logging.getLogger(__name__)
-
-# Set the logging level
-logger.setLevel(logging.DEBUG)
-
-# Create a console handler and set level to debug
-ch = logging.StreamHandler()
-ch.setLevel(logging.DEBUG)
-
-# Create a formatter and add it to the handler
-formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
-ch.setFormatter(formatter)
-
-# Add the handler to the logger
-logger.addHandler(ch)
+from .models import Order
 
 
-@login_required
-def order_list(request):
-    """View to list all orders made by the logged-in user."""
-    orders = Order.objects.filter(user=request.user)
-    return render(request, 'orders/order_list.html', {'orders': orders})
+class OrderTests(TestCase):
+    def setUp(self):
+        # Create a test user
+        self.user = get_user_model().objects.create_user(
+            username='testuser',
+            password='password123'
+        )
 
-@login_required
-@transaction.atomic
-def place_order(request, drug_id=None):
-    drug = get_object_or_404(Drug, id=drug_id) if drug_id else None
+        # Create a test drug
+        self.drug = Drug.objects.create(
+            name='Test Drug',
+            category='Painkillers',
+            description='Effective for pain relief',
+            manufacturer='Health Inc.',
+            expiry_date='2025-12-31',
+            price=15.50,
+            stock_quantity=50
+        )
 
-    if request.method == 'POST':
-        selected_drug_id = request.POST.get('drug')
-        quantity = int(request.POST.get('quantity', 0))
-        drug = get_object_or_404(Drug, id=selected_drug_id) if not drug else drug
+        # Log in the test user
+        self.client.login(username='testuser', password='password123')
 
-        if quantity <= 0:
-            messages.error(request, 'Quantity must be greater than 0.')
-        elif quantity > drug.stock_quantity:
-            messages.error(request, 'Insufficient stock.')
-        else:
-            total_price = drug.price * quantity
-            Order.objects.create(
-                user=request.user,
-                drug=drug,
-                quantity=quantity,
-                total_price=total_price
-            )
-            drug.stock_quantity -= quantity
-            drug.save()
+        # Create a test order
+        self.order = Order.objects.create(
+            user=self.user,
+            drug=self.drug,
+            quantity=2,
+            total_price=31.00,
+            status='PENDING'
+        )
 
-            messages.success(request, 'Order placed successfully!')
-            return redirect('orders:order_list')
+    # Model Tests
+    def test_order_creation(self):
+        """Test that the Order model correctly creates an order."""
+        self.assertEqual(self.order.user, self.user)
+        self.assertEqual(self.order.drug, self.drug)
+        self.assertEqual(self.order.quantity, 2)
+        self.assertAlmostEqual(self.order.total_price, 31.00, places=2)
+        self.assertEqual(self.order.status, 'PENDING')
 
-    drugs = Drug.objects.filter(stock_quantity__gt=0)
-    return render(request, 'orders/place_order.html', {'drug': drug, 'drugs': drugs})
+    def test_order_str_representation(self):
+        """Test the string representation of the Order model."""
+        expected_str = f"Order #{self.order.id} by {self.user.username}"
+        self.assertEqual(str(self.order), expected_str)
 
-@login_required
-@transaction.atomic
-@login_required
-@transaction.atomic
-def cancel_order(request, pk):
-    order = get_object_or_404(Order, id=pk, user=request.user)
-    if request.method == 'POST':
-        drug = order.drug
-        
-        # Log the stock value before canceling
-        logger.debug(f"Stock before cancel: {drug.stock_quantity}")
+    # View Tests
+    def test_order_list_view(self):
+        """Test the order list view displays correctly."""
+        response = self.client.get(reverse('orders:order_list'))
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'orders/order_list.html')
+        self.assertContains(response, f"Order #{self.order.id}")  # Ensure order details appear
+        self.assertContains(response, 'Test Drug')  # Ensure drug name appears
 
-        if order.status != 'CANCELED':
-            # Instead of adding the quantity back, we do nothing if canceling
-            # The stock was already updated during order placement (when it was reduced).
-            pass
+    def test_place_order_with_drug_view(self):
+        """Test placing an order through the place order view with drug ID."""
+        response = self.client.post(
+            reverse('orders:place_order_with_drug', args=[self.drug.id]),
+            {'quantity': 3}
+        )
+        self.assertEqual(response.status_code, 302)  # Redirect on success
+        self.assertEqual(Order.objects.count(), 2)  # New order should be created
+        new_order = Order.objects.last()
+        self.assertEqual(new_order.quantity, 3)
+        self.assertAlmostEqual(new_order.total_price, 46.50, places=2)
 
-        # Update the order's status to 'CANCELED'
-        order.status = 'CANCELED'
-        order.save()
+    def test_place_order_without_drug_view(self):
+        """Test placing an order through the general place order view."""
+        response = self.client.post(
+            reverse('orders:place_order'),
+            {'drug': self.drug.id, 'quantity': 4}
+        )
+        self.assertEqual(response.status_code, 302)  # Redirect on success
+        self.assertEqual(Order.objects.count(), 2)  # New order should be created
+        new_order = Order.objects.last()
+        self.assertEqual(new_order.quantity, 4)
+        self.assertAlmostEqual(new_order.total_price, 62.00, places=2)
 
-        # Log the stock value after canceling
-        logger.debug(f"Stock after cancel: {drug.stock_quantity}")
+    def test_place_order_insufficient_stock(self):
+        """Test placing an order when stock is insufficient."""
+        response = self.client.post(
+            reverse('orders:place_order_with_drug', args=[self.drug.id]),
+            {'quantity': 100}  # Exceeds available stock
+        )
+        self.assertEqual(response.status_code, 200)  # Stay on the same page
+        self.assertContains(response, 'Insufficient stock.')
 
-        messages.success(request, 'Order canceled successfully.')
-        return redirect('orders:order_list')
+    def test_place_order_invalid_quantity(self):
+        """Test placing an order with invalid quantity."""
+        response = self.client.post(
+            reverse('orders:place_order_with_drug', args=[self.drug.id]),
+            {'quantity': 0}  # Invalid quantity
+        )
+        self.assertEqual(response.status_code, 200)  # Stay on the same page
+        self.assertContains(response, 'Quantity must be greater than 0.')
 
-    return render(request, 'orders/cancel_order.html', {'order': order})
+    def test_order_detail_view(self):
+        """Test the order detail view displays correctly."""
+        response = self.client.get(reverse('orders:order_detail', args=[self.order.id]))
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'orders/order_detail.html')
+        self.assertContains(response, 'Test Drug')
 
+    def test_order_list_view_empty(self):
+        """Test the order list view when there are no orders."""
+        Order.objects.all().delete()  # Remove all orders
+        response = self.client.get(reverse('orders:order_list'))
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'No orders available.')
 
-@login_required
-def order_detail(request, pk):
-    """View to display details of a specific order."""
-    order = get_object_or_404(Order, id=pk, user=request.user)
-    return render(request, 'orders/order_detail.html', {'order': order})
+    def test_cancel_order_view(self):
+        """Test the cancel order functionality."""
+        initial_stock = self.drug.stock_quantity
 
-# orders/views.py
+        # Cancel the order
+        response = self.client.post(reverse('orders:cancel_order', args=[self.order.id]))
 
-@login_required
-def order_history(request):
-    orders = Order.objects.filter(user=request.user)
-    return render(request, 'orders/order_history.html', {'orders': orders})
+        # Reload the order and drug after canceling
+        self.order.refresh_from_db()
+        self.drug.refresh_from_db()
 
+        self.assertEqual(response.status_code, 302)  # Redirect on success
+        self.assertEqual(self.order.status, 'CANCELED')  # Status should be updated
+        self.assertEqual(self.drug.stock_quantity, initial_stock + self.order.quantity)  # Stock restored
+
+    def test_order_history_view(self):
+        """Test the order history view."""
+        response = self.client.get(reverse('orders:order_history'))
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'orders/order_history.html')
+        self.assertContains(response, f"Order #{self.order.id}")
