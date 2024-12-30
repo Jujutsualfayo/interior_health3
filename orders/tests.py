@@ -59,10 +59,10 @@ class OrderTests(TestCase):
         self.assertContains(response, f"Order #{self.order.id}")  # Ensure order details appear
         self.assertContains(response, 'Test Drug')  # Ensure drug name appears
 
-    def test_place_order_view(self):
-        """Test placing an order through the place order view."""
+    def test_place_order_with_drug_view(self):
+        """Test placing an order through the place order view with drug ID."""
         response = self.client.post(
-            reverse('orders:place_order_with_drug', args=[self.drug.id]),  # Updated URL
+            reverse('orders:place_order_with_drug', args=[self.drug.id]),
             {'quantity': 3}
         )
         self.assertEqual(response.status_code, 302)  # Redirect on success
@@ -70,6 +70,18 @@ class OrderTests(TestCase):
         new_order = Order.objects.last()
         self.assertEqual(new_order.quantity, 3)
         self.assertAlmostEqual(new_order.total_price, 46.50, places=2)
+
+    def test_place_order_without_drug_view(self):
+        """Test placing an order through the general place order view."""
+        response = self.client.post(
+            reverse('orders:place_order'),
+            {'drug': self.drug.id, 'quantity': 4}
+        )
+        self.assertEqual(response.status_code, 302)  # Redirect on success
+        self.assertEqual(Order.objects.count(), 2)  # New order should be created
+        new_order = Order.objects.last()
+        self.assertEqual(new_order.quantity, 4)
+        self.assertAlmostEqual(new_order.total_price, 62.00, places=2)
 
     def test_place_order_insufficient_stock(self):
         """Test placing an order when stock is insufficient."""
@@ -80,13 +92,6 @@ class OrderTests(TestCase):
         self.assertEqual(response.status_code, 200)  # Stay on the same page
         self.assertContains(response, 'Insufficient stock.')
 
-    def test_order_detail_view(self):
-        """Test the order detail view displays correctly."""
-        response = self.client.get(reverse('orders:order_detail', args=[self.order.id]))
-        self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, 'orders/order_detail.html')
-        self.assertContains(response, 'Test Drug')
-
     def test_place_order_invalid_quantity(self):
         """Test placing an order with invalid quantity."""
         response = self.client.post(
@@ -95,6 +100,13 @@ class OrderTests(TestCase):
         )
         self.assertEqual(response.status_code, 200)  # Stay on the same page
         self.assertContains(response, 'Quantity must be greater than 0.')
+
+    def test_order_detail_view(self):
+        """Test the order detail view displays correctly."""
+        response = self.client.get(reverse('orders:order_detail', args=[self.order.id]))
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'orders/order_detail.html')
+        self.assertContains(response, 'Test Drug')
 
     def test_order_list_view_empty(self):
         """Test the order list view when there are no orders."""
@@ -105,9 +117,7 @@ class OrderTests(TestCase):
 
     def test_cancel_order_view(self):
         """Test the cancel order functionality."""
-        # Record the initial stock quantity before canceling the order
         initial_stock = self.drug.stock_quantity
-        print(f"Initial stock before cancel: {initial_stock}")
 
         # Cancel the order
         response = self.client.post(reverse('orders:cancel_order', args=[self.order.id]))
@@ -116,11 +126,13 @@ class OrderTests(TestCase):
         self.order.refresh_from_db()
         self.drug.refresh_from_db()
 
-        # Print the stock after canceling
-        print(f"Stock after cancel: {self.drug.stock_quantity}")
+        self.assertEqual(response.status_code, 302)  # Redirect on success
+        self.assertEqual(self.order.status, 'CANCELED')  # Status should be updated
+        self.assertEqual(self.drug.stock_quantity, initial_stock + self.order.quantity)  # Stock restored
 
-        # Ensure the order was successfully canceled (status should be 'CANCELED')
-        self.assertEqual(self.order.status, 'CANCELED')
-
-        # Ensure the stock has been correctly refunded
-        self.assertEqual(self.drug.stock_quantity, initial_stock)  # Stock should be restored to the original value
+    def test_order_history_view(self):
+        """Test the order history view."""
+        response = self.client.get(reverse('orders:order_history'))
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'orders/order_history.html')
+        self.assertContains(response, f"Order #{self.order.id}")
