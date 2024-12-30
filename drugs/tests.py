@@ -84,7 +84,7 @@ class DrugViewTest(TestCase):
 
     def test_drug_list_view(self):
         """Test if the drug list view is rendering correctly."""
-        response = self.client.get(reverse('drug_list'))  # URL pattern name should match the view
+        response = self.client.get(reverse('drugs:drug_list'))  # Correct the URL name to 'drugs:drug_list'
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, "Test Drug")  # Ensure that the drug name is in the response
         self.assertTemplateUsed(response, 'drugs/drug_list.html')  # Check if the correct template is used
