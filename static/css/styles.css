@@ -3,64 +3,73 @@ body {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   margin: 0;
   padding: 0;
-  background-color: #eaf4f4;
+  background: linear-gradient(135deg, #eaf4f4, #f9fdfd);
   color: #333;
-  line-height: 1.6;
+  line-height: 1.7;
 }
 
 h2 {
   color: #2c3e50;
   text-align: center;
-  margin-bottom: 20px;
-  font-size: 2em;
+  margin-bottom: 25px;
+  font-size: 2.2em;
   font-weight: bold;
+  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1);
 }
 
 p {
   text-align: center;
-  margin: 10px 0;
+  margin: 15px 0;
   color: #555;
   font-size: 1.1em;
+  line-height: 1.5;
 }
 
 a {
   color: #28a745;
   text-decoration: none;
   font-weight: bold;
+  transition: color 0.3s ease;
 }
 
 a:hover {
   text-decoration: underline;
-  color: #218838;
+  color: #1e7e34;
 }
 
 /* Container for pages */
 .page-container {
-  max-width: 700px;
+  max-width: 750px;
   margin: 50px auto;
   background: #ffffff;
-  padding: 25px;
-  border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+  transition: box-shadow 0.3s ease;
+}
+
+.page-container:hover {
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
 }
 
 /* Buttons */
 .btn {
   display: inline-block;
-  padding: 12px 20px;
-  background-color: #28a745;
+  padding: 12px 22px;
+  background: linear-gradient(135deg, #28a745, #218838);
   color: white;
   border: none;
-  border-radius: 5px;
+  border-radius: 8px;
   font-size: 16px;
   cursor: pointer;
   text-align: center;
   text-transform: uppercase;
-  transition: background-color 0.3s ease;
+  transition: background 0.3s ease, transform 0.2s ease;
 }
 
 .btn:hover {
-  background-color: #218838;
+  background: linear-gradient(135deg, #218838, #1c7430);
+  transform: scale(1.05);
 }
 
 /* Messages */
@@ -72,48 +81,56 @@ a:hover {
 
 .messages li {
   padding: 12px;
-  margin: 8px 0;
-  border-radius: 5px;
+  margin: 10px 0;
+  border-radius: 6px;
   font-size: 1em;
 }
 
 .messages .success {
   background-color: #d4edda;
   color: #155724;
-  border: 1px solid #c3e6cb;
+  border-left: 5px solid #28a745;
 }
 
 .messages .error {
   background-color: #f8d7da;
   color: #721c24;
-  border: 1px solid #f5c6cb;
+  border-left: 5px solid #dc3545;
 }
 
 /* Forms */
 form {
-  margin-top: 20px;
+  margin-top: 25px;
 }
 
 form .form-control {
   width: 100%;
   padding: 12px;
-  margin: 10px 0;
+  margin: 12px 0;
   border: 1px solid #ccc;
-  border-radius: 5px;
+  border-radius: 8px;
   font-size: 1em;
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+form .form-control:focus {
+  border-color: #28a745;
+  outline: none;
+  box-shadow: 0 0 5px rgba(40, 167, 69, 0.5);
 }
 
 form .btn {
   width: 100%;
-  margin-top: 20px;
+  margin-top: 15px;
   background-color: #28a745;
   color: white;
 }
 
 form label {
   font-weight: bold;
-  margin-bottom: 5px;
+  margin-bottom: 8px;
   display: block;
+  text-transform: capitalize;
 }
 
 /* Links */
@@ -128,15 +145,15 @@ form label {
 
 .logout-link:hover, .login-link:hover {
   text-decoration: underline;
-  color: #218838;
+  color: #1e7e34;
 }
 
 /* Specific Page Styles */
 .home-page {
   text-align: center;
-  padding: 20px;
-  background: #f5fafd;
-  border-radius: 10px;
+  padding: 25px;
+  background: linear-gradient(135deg, #f5fafd, #eaf4f4);
+  border-radius: 12px;
 }
 
 .cta .btn {
@@ -146,34 +163,34 @@ form label {
 }
 
 .profile-page {
-  max-width: 600px;
+  max-width: 650px;
   margin: auto;
   background: #ffffff;
-  padding: 20px;
-  border-radius: 10px;
-  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+  padding: 25px;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
 .profile-page h2 {
   text-align: center;
-  margin-bottom: 20px;
+  margin-bottom: 25px;
 }
 
 .register-page {
   text-align: center;
-  padding: 20px;
-  background: #f5fafd;
-  border-radius: 10px;
-  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+  padding: 25px;
+  background: linear-gradient(135deg, #f5fafd, #ffffff);
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
 /* Footer (Optional) */
 footer {
   text-align: center;
   padding: 15px;
-  background-color: #28a745;
+  background: linear-gradient(135deg, #28a745, #1e7e34);
   color: white;
-  margin-top: 20px;
+  margin-top: 30px;
 }
 
 footer a {
