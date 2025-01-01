@@ -8,7 +8,7 @@
   <a href="{% url 'drugs:drug_list' %}">View All Drugs</a>
 
   <!-- Display the drug list -->
-  {% if drugs.count %}
+  {% if drugs %}
     <ul>
       {% for drug in drugs %}
         <li>
