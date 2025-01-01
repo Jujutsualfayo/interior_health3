@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block title %}Home - Interior Health{% endblock %}
+
+{% block content %}
+<div class="home-page">
+  <h1>Welcome to Interior Health</h1>
+  <p>Access Health, Access Life- Anytime, Anywhere.</p>
+
+  <div class="intro">
+    <h2>Our Mission</h2>
+    <p>We aim to make healthcare accessible and affordable for all.</p>
+  </div>
+
+  <div class="cta">
+    <h2>Get Started</h2>
+    <p>Sign up to become a member or log in to access your healthcare services.</p>
+    <a href="{% url 'users:register' %}" class="btn btn-primary">Register</a>
+    <a href="{% url 'users:login' %}" class="btn btn-secondary">Login</a>
+  </div>
+
+  {% if messages %}
+    <ul class="messages">
+      {% for message in messages %}
+        <li class="{{ message.tags }}">{{ message }}</li>
+      {% endfor %}
+    </ul>
+  {% endif %}
+</div>
+
+<!-- Link to CSS -->
+<link rel="stylesheet" type="text/css" href="{% static 'css/styles.css' %}">
+
+{% endblock %}

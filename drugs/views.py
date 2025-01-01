@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from .models import Drug
-from .forms import DrugForm  # Import the DrugForm
+from .forms import DrugForm 
 
 # View to display the list of drugs and handle drug addition
 def drug_list(request):
