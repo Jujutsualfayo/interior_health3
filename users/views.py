@@ -30,8 +30,10 @@ def login_view(request):
             login(request, user)
             return redirect('users:home')
         else:
+            # Pass the error message in the context
             return render(request, 'users/login.html', {'error': 'Invalid username or password.'})
     return render(request, 'users/login.html')
+
 
 
 def logout_view(request):
