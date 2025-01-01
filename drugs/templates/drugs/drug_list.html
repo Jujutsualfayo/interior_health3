@@ -3,7 +3,10 @@
 
 {% block content %}
   <h2>Drugs Available</h2>
-
+  
+  <!-- Link to refresh or view the drug list -->
+  <a href="{% url 'drugs:drug_list' %}">View All Drugs</a>
+  
   <!-- Display the drug list -->
   {% if drugs %}
     <ul>
