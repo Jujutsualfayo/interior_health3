@@ -6,7 +6,7 @@ class Drug(models.Model):
     category = models.CharField(max_length=100)
     description = models.TextField(blank=True, null=True)
     manufacturer = models.CharField(max_length=200)
-    expiry_date = models.DateField()
+    expiry_date = models.DateField(null=True, blank=True)  # Allow NULL for expiry_date
 
     # Inventory management
     price = models.DecimalField(max_digits=10, decimal_places=2)
@@ -23,4 +23,3 @@ class Drug(models.Model):
     def is_low_stock(self):
         """Check if the stock is below the minimum level."""
         return self.stock_quantity < self.minimum_stock
-
