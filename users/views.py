@@ -4,6 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from .forms import UserRegistrationForm, UserUpdateForm, ProfileUpdateForm
 from .models import Profile
+from django.contrib.auth.models import Group
 
 
 def home(request):
@@ -15,6 +16,14 @@ def register(request):
         form = UserRegistrationForm(request.POST)
         if form.is_valid():
             user = form.save()
+            # Assign group based on role
+            if user.role == 'admin':
+                group = Group.objects.get(name='Admin')
+            elif user.role == 'health_worker':
+                group = Group.objects.get(name='Health Worker')
+            elif user.role == 'patient':
+                group = Group.objects.get(name='Patient')
+            group.user_set.add(user)
             login(request, user)
             return redirect('users:home')
     else:
