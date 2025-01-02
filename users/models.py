@@ -1,6 +1,7 @@
 from django.contrib.auth.models import AbstractUser, Group, Permission
 from django.db import models
 
+
 class User(AbstractUser):
     ROLE_CHOICES = (
         ('admin', 'Admin'),
@@ -11,7 +12,6 @@ class User(AbstractUser):
     address = models.CharField(max_length=255, blank=True, null=True)
     phone_number = models.CharField(max_length=15, blank=True, null=True)
 
-    # Resolve conflicts by setting unique related_name values
     groups = models.ManyToManyField(
         Group,
         related_name='custom_user_groups',
@@ -23,8 +23,15 @@ class User(AbstractUser):
         blank=True,
     )
 
+    def save(self, *args, **kwargs):
+        is_new = self.pk is None  # Check if the user is being created
+        super().save(*args, **kwargs)
+        if is_new:
+            Profile.objects.create(user=self)  # Create the associated profile
+
     def __str__(self):
         return self.username
+
 
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')
