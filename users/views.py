@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, logout, authenticate
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib import messages
 from .forms import UserRegistrationForm, UserUpdateForm, ProfileUpdateForm
 from .models import Profile
@@ -12,18 +12,32 @@ def home(request):
 
 
 def register(request):
+    """
+    Handles user registration and assigns the appropriate group based on their role.
+    """
     if request.method == 'POST':
         form = UserRegistrationForm(request.POST)
         if form.is_valid():
             user = form.save()
             # Assign group based on role
-            if user.role == 'admin':
-                group = Group.objects.get(name='Admin')
-            elif user.role == 'health_worker':
-                group = Group.objects.get(name='Health Worker')
-            elif user.role == 'patient':
-                group = Group.objects.get(name='Patient')
-            group.user_set.add(user)
+            try:
+                if user.role == 'admin':
+                    group = Group.objects.get(name='Admin')
+                elif user.role == 'health_worker':
+                    group = Group.objects.get(name='Health Worker')
+                elif user.role == 'patient':
+                    group = Group.objects.get(name='Patient')
+                else:
+                    group = None
+
+                if group:
+                    group.user_set.add(user)
+                else:
+                    messages.error(request, 'Invalid role assigned to the user.')
+
+            except Group.DoesNotExist:
+                messages.error(request, 'Role group does not exist. Contact admin.')
+
             login(request, user)
             return redirect('users:home')
     else:
@@ -32,6 +46,9 @@ def register(request):
 
 
 def login_view(request):
+    """
+    Handles user login.
+    """
     if request.method == 'POST':
         username = request.POST['username']
         password = request.POST['password']
@@ -40,19 +57,23 @@ def login_view(request):
             login(request, user)
             return redirect('users:home')
         else:
-            # Pass the error message in the context
             return render(request, 'users/login.html', {'error': 'Invalid username or password.'})
     return render(request, 'users/login.html')
 
 
-
 def logout_view(request):
+    """
+    Logs out the user and redirects them to the login page.
+    """
     logout(request)
     return redirect('users:login')
 
 
 @login_required
 def profile(request):
+    """
+    Handles user profile updates and ensures a profile exists for the logged-in user.
+    """
     # Ensure the user has a profile
     if not hasattr(request.user, 'profile'):
         Profile.objects.create(user=request.user)
@@ -74,3 +95,30 @@ def profile(request):
         'profile_form': profile_form
     })
 
+
+# Role-Based Access Views
+@login_required
+@user_passes_test(lambda u: u.groups.filter(name='Admin').exists())
+def admin_dashboard(request):
+    """
+    Dashboard for Admin users only.
+    """
+    return render(request, 'admin_dashboard.html')
+
+
+@login_required
+@user_passes_test(lambda u: u.groups.filter(name='Health Worker').exists())
+def health_worker_dashboard(request):
+    """
+    Dashboard for Health Workers only.
+    """
+    return render(request, 'health_worker_dashboard.html')
+
+
+@login_required
+@user_passes_test(lambda u: u.groups.filter(name='Patient').exists())
+def patient_dashboard(request):
+    """
+    Dashboard for Patients only.
+    """
+    return render(request, 'patient_dashboard.html')
