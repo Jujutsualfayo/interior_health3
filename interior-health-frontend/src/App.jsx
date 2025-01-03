@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import api from './services/api'; // Import the API service you created
+import api from './services/api'; // Import the API service
+import './styles/styles.css'; // Import custom styles
 
 function App() {
   const [drugs, setDrugs] = useState([]);
 
   useEffect(() => {
-    // Fetch drugs data from the backend
-    api.get('drugs/') // Replace 'drugs/' with the correct endpoint if needed
+    api.get('drugs/') // Replace 'drugs/'
       .then((response) => {
         console.log(response.data); // Log the data for testing
         setDrugs(response.data); // Save the data to state
@@ -24,7 +24,8 @@ function App() {
         <ul>
           {drugs.map((drug) => (
             <li key={drug.id}>
-              {drug.name} - ${drug.price}
+              <span>{drug.name}</span>
+              <span>${drug.price}</span>
             </li>
           ))}
         </ul>
