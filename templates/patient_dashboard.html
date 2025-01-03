@@ -1,11 +1,18 @@
 {% extends "base.html" %}
+{% load static %}
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
+{% endblock %}
 
 {% block content %}
-<h1>Patient Dashboard</h1>
-<p>Welcome, {{ user.username }}! Here, you can view your prescriptions, manage your appointments, and update your profile.</p>
-<ul>
-    <li><a href="#">View Prescriptions</a></li>
-    <li><a href="#">Book Appointment</a></li>
-    <li><a href="#">Update Profile</a></li>
-</ul>
+<body class="patient-dashboard">
+    <div class="dashboard-container patient">
+        <h2>Patient Dashboard</h2>
+        <ul>
+            <li>View Prescriptions</li>
+            <li>Order Drugs</li>
+            <li>Contact Health Worker</li>
+        </ul>
+    </div>
+</body>
 {% endblock %}
