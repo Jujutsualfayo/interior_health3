@@ -1,0 +1,158 @@
+/* General Styles for Dashboards */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+}
+
+header {
+    background-color: #004080;
+    color: #ffffff;
+    padding: 1em 0;
+    text-align: center;
+}
+
+header h1 {
+    margin: 0;
+}
+
+nav {
+    background-color: #ffffff;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    padding: 10px 0;
+    text-align: center;
+}
+
+nav a {
+    margin: 0 15px;
+    color: #004080;
+    text-decoration: none;
+    font-weight: bold;
+    padding: 10px 15px;
+    border-radius: 4px;
+}
+
+nav a:hover {
+    background-color: #004080;
+    color: #ffffff;
+    text-decoration: none;
+}
+
+.dashboard-container {
+    max-width: 1200px;
+    margin: 40px auto;
+    background: #ffffff;
+    padding: 20px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+}
+
+.dashboard-container h2 {
+    color: #004080;
+    margin-bottom: 20px;
+    font-size: 24px;
+    border-bottom: 2px solid #ddd;
+    padding-bottom: 10px;
+}
+
+.dashboard-container ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.dashboard-container ul li {
+    padding: 15px 10px;
+    border-bottom: 1px solid #ddd;
+    font-size: 18px;
+    color: #333333;
+}
+
+.dashboard-container ul li:last-child {
+    border-bottom: none;
+}
+
+.dashboard-container ul li:hover {
+    background-color: #f8f8f8;
+}
+
+/* Admin Dashboard Styles */
+body.admin-dashboard {
+    background-color: #e8f5e9;
+}
+
+.dashboard-container.admin {
+    border-left: 6px solid #2e7d32;
+}
+
+.dashboard-container.admin h2 {
+    color: #2e7d32;
+}
+
+/* Health Worker Dashboard Styles */
+body.health-worker-dashboard {
+    background-color: #e3f2fd;
+}
+
+.dashboard-container.health-worker {
+    border-left: 6px solid #1565c0;
+}
+
+.dashboard-container.health-worker h2 {
+    color: #1565c0;
+}
+
+/* Patient Dashboard Styles */
+body.patient-dashboard {
+    background-color: #fbe9e7;
+}
+
+.dashboard-container.patient {
+    border-left: 6px solid #d84315;
+}
+
+.dashboard-container.patient h2 {
+    color: #d84315;
+}
+
+/* Buttons (Optional) */
+.dashboard-container .btn {
+    display: inline-block;
+    padding: 10px 20px;
+    font-size: 16px;
+    color: #ffffff;
+    background-color: #004080;
+    text-align: center;
+    text-decoration: none;
+    border-radius: 4px;
+    margin-top: 10px;
+}
+
+.dashboard-container .btn:hover {
+    background-color: #003366;
+}
+
+.dashboard-container .btn-admin {
+    background-color: #2e7d32;
+}
+
+.dashboard-container .btn-admin:hover {
+    background-color: #1b5e20;
+}
+
+.dashboard-container .btn-health-worker {
+    background-color: #1565c0;
+}
+
+.dashboard-container .btn-health-worker:hover {
+    background-color: #0d47a1;
+}
+
+.dashboard-container .btn-patient {
+    background-color: #d84315;
+}
+
+.dashboard-container .btn-patient:hover {
+    background-color: #bf360c;
+}
