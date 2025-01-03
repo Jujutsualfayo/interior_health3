@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>Admin Dashboard</h1>
+<p>Welcome, {{ user.username }}! Here, you can manage the system, view statistics, and handle administrative tasks.</p>
+<ul>
+    <li><a href="#">Manage Users</a></li>
+    <li><a href="#">System Logs</a></li>
+    <li><a href="#">Generate Reports</a></li>
+</ul>
+{% endblock %}
