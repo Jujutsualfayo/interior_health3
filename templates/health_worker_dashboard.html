@@ -1,11 +1,18 @@
 {% extends "base.html" %}
+{% load static %}
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
+{% endblock %}
 
 {% block content %}
-<h1>Health Worker Dashboard</h1>
-<p>Welcome, {{ user.username }}! Here, you can manage patient records, handle prescriptions, and track appointments.</p>
-<ul>
-    <li><a href="#">View Patient Records</a></li>
-    <li><a href="#">Manage Prescriptions</a></li>
-    <li><a href="#">View Appointments</a></li>
-</ul>
+<body class="health-worker-dashboard">
+    <div class="dashboard-container health-worker">
+        <h2>Health Worker Dashboard</h2>
+        <ul>
+            <li>Manage Patients</li>
+            <li>Submit Reports</li>
+            <li>Order Drugs</li>
+        </ul>
+    </div>
+</body>
 {% endblock %}
