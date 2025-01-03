@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>Patient Dashboard</h1>
+<p>Welcome, {{ user.username }}! Here, you can view your prescriptions, manage your appointments, and update your profile.</p>
+<ul>
+    <li><a href="#">View Prescriptions</a></li>
+    <li><a href="#">Book Appointment</a></li>
+    <li><a href="#">Update Profile</a></li>
+</ul>
+{% endblock %}
