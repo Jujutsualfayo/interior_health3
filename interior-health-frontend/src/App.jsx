@@ -6,7 +6,7 @@ function App() {
   const [drugs, setDrugs] = useState([]);
 
   useEffect(() => {
-    api.get('drugs/') // Replace 'drugs/'
+    api.get('drugs/') // Replace 'drugs/' with the correct endpoint if needed
       .then((response) => {
         console.log(response.data); // Log the data for testing
         setDrugs(response.data); // Save the data to state
@@ -17,15 +17,15 @@ function App() {
   }, []);
 
   return (
-    <div>
+    <div className="container">
       <h1>Interior Health App</h1>
       <h2>Available Drugs</h2>
       {drugs.length > 0 ? (
         <ul>
           {drugs.map((drug) => (
             <li key={drug.id}>
-              <span>{drug.name}</span>
-              <span>${drug.price}</span>
+              <div className="drug-name">{drug.name}</div>
+              <div className="drug-price">${drug.price}</div>
             </li>
           ))}
         </ul>
