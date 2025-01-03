@@ -1,8 +1,10 @@
+from django.contrib.auth.decorators import login_required 
 from django.shortcuts import render, redirect
 from .models import Drug
 from .forms import DrugForm 
 
 # View to display the list of drugs and handle drug addition
+@login_required 
 def drug_list(request):
     if request.method == 'POST':
         form = DrugForm(request.POST, request.FILES)  # Handle the form submission (including file uploads)
