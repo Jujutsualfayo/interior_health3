@@ -1,31 +1,22 @@
 import os
 from pathlib import Path
 
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
-
-# SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = "django-insecure-hm&!i8p&)zjgiazp7%b!e+1lx1)m55jc+yo3yw!--(0$$ba40n"
-
-# SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
 ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
 
-# Add CSRF trusted origins
 CSRF_TRUSTED_ORIGINS = [
     'http://127.0.0.1:8000',
     'https://localhost:8000',
 ]
 
-# Define the custom User model
-AUTH_USER_MODEL = "users.User"
-
-# Set the login URL
-LOGIN_URL = 'users:login'
+# Add CORS allowed origins
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:5173",  # Frontend URL
+]
 
 # Application definition
 INSTALLED_APPS = [
@@ -38,13 +29,14 @@ INSTALLED_APPS = [
     "users",
     "drugs",
     "orders",
-    "corsheaders",
+    "corsheaders",  # CORS headers added
 ]
 
+# Middleware settings (ensure correct comma placement)
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
-    "corsheaders.middleware.CorsMiddleware"
+    "corsheaders.middleware.CorsMiddleware",  # Corrected with comma
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
@@ -57,7 +49,7 @@ ROOT_URLCONF = "interior_health3.urls"
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'templates'],  # Points to your global templates folder
+        'DIRS': [BASE_DIR / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -72,17 +64,13 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "interior_health3.wsgi.application"
 
-# Database
-# https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',  # Path to the SQLite file
+        'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
 
-# Password validation
-# https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
 AUTH_PASSWORD_VALIDATORS = [
     {
         "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",
@@ -98,42 +86,28 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-# Internationalization
-# https://docs.djangoproject.com/en/5.1/topics/i18n/
 LANGUAGE_CODE = "en-us"
-
 TIME_ZONE = "UTC"
 
 USE_I18N = True
-
 USE_TZ = True
 
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/5.1/howto/static-files/
 STATIC_URL = '/static/'
-
-# Directory where static files are collected for production
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-
-# Directories for static files during development
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static'),
 ]
 
-# Media files (uploads, profile pictures, etc.)
 MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')  # Directory where uploaded files are stored
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
-# Default primary key field type
-# https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
-# Debugging and Production Check
+# Security settings for production (optional, can be activated when going live)
 if not DEBUG:
-    # Additional security settings for production
     SECURE_BROWSER_XSS_FILTER = True
     SECURE_CONTENT_TYPE_NOSNIFF = True
-    SECURE_HSTS_SECONDS = 31536000  # Use a long value for production
+    SECURE_HSTS_SECONDS = 31536000
     SECURE_SSL_REDIRECT = True
     SESSION_COOKIE_SECURE = True
     CSRF_COOKIE_SECURE = True
