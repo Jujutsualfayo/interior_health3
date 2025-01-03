@@ -28,11 +28,11 @@
         
         <!-- Conditional rendering for role-based dashboards -->
         {% if user.is_authenticated %}
-          {% if user|is_in_group:"Admin" %}
+          {% if user|is_admin %}
             <li><a href="{% url 'users:admin_dashboard' %}">Admin Dashboard</a></li>
-          {% elif user|is_in_group:"Health Worker" %}
+          {% elif user|is_health_worker %}
             <li><a href="{% url 'users:health_worker_dashboard' %}">Health Worker Dashboard</a></li>
-          {% elif user|is_in_group:"Patient" %}
+          {% elif user|is_patient %}
             <li><a href="{% url 'users:patient_dashboard' %}">Patient Dashboard</a></li>
           {% endif %}
           <li><a href="{% url 'users:logout' %}">Logout</a></li>
