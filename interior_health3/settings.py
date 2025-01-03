@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     "users",
     "drugs",
     "orders",
+    "corsheaders",
 ]
 
 MIDDLEWARE = [
