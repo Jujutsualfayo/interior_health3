@@ -5,7 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>{% block title %}Interior Health{% endblock %}</title>
   {% load static %}
-  
+  {% load custom_filters %} <!-- Load your custom filters -->
+
   <!-- Ensure the favicon.ico is placed correctly in the static folder -->
   <link rel="icon" href="{% static 'images/favicon_io/myicon.ico' %}" type="image/x-icon">
   
@@ -27,11 +28,11 @@
         
         <!-- Conditional rendering for role-based dashboards -->
         {% if user.is_authenticated %}
-          {% if user.groups.filter(name='Admin').exists %}
+          {% if user|is_in_group:"Admin" %}
             <li><a href="{% url 'users:admin_dashboard' %}">Admin Dashboard</a></li>
-          {% elif user.groups.filter(name='Health Worker').exists %}
+          {% elif user|is_in_group:"Health Worker" %}
             <li><a href="{% url 'users:health_worker_dashboard' %}">Health Worker Dashboard</a></li>
-          {% elif user.groups.filter(name='Patient').exists %}
+          {% elif user|is_in_group:"Patient" %}
             <li><a href="{% url 'users:patient_dashboard' %}">Patient Dashboard</a></li>
           {% endif %}
           <li><a href="{% url 'users:logout' %}">Logout</a></li>
