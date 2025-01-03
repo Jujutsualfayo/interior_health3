@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import api from '../services/api'; // Import the API service
-import './styles/styles.css'; // Import custom styles
+import "../styles/styles.css"; // One level up to src
+
 
 const DrugsList = () => {
   const [drugs, setDrugs] = useState([]);
