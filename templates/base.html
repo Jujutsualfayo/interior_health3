@@ -24,6 +24,18 @@
         <li><a href="{% url 'users:profile' %}">Profile</a></li>
         <li><a href="{% url 'drugs:drug_list' %}">Drugs</a></li>
         <li><a href="{% url 'orders:order_list' %}">Orders</a></li>
+        
+        <!-- Conditional rendering for role-based dashboards -->
+        {% if user.is_authenticated %}
+          {% if user.groups.filter(name='Admin').exists %}
+            <li><a href="{% url 'users:admin_dashboard' %}">Admin Dashboard</a></li>
+          {% elif user.groups.filter(name='Health Worker').exists %}
+            <li><a href="{% url 'users:health_worker_dashboard' %}">Health Worker Dashboard</a></li>
+          {% elif user.groups.filter(name='Patient').exists %}
+            <li><a href="{% url 'users:patient_dashboard' %}">Patient Dashboard</a></li>
+          {% endif %}
+          <li><a href="{% url 'users:logout' %}">Logout</a></li>
+        {% endif %}
       </ul>
     </nav>
   </header>
