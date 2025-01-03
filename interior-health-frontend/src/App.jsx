@@ -5,6 +5,7 @@ function App() {
   const [drugs, setDrugs] = useState([]);
 
   useEffect(() => {
+    // Fetch drugs data from the backend
     api.get('drugs/') // Replace 'drugs/' with the correct endpoint if needed
       .then((response) => {
         console.log(response.data); // Log the data for testing
@@ -35,4 +36,3 @@ function App() {
 }
 
 export default App;
-
