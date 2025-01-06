@@ -1,11 +1,9 @@
 # drugs/urls.py
 from django.urls import path
-from . import views
+from .views import drug_list_api
 
-app_name = 'drugs'   
+app_name = 'drugs'
 
 urlpatterns = [
-    path('', views.drug_list, name='drug_list'),
-
-
+    path('api/drugs/', drug_list_api, name='drug_list_api'),
 ]
