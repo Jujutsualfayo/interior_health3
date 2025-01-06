@@ -33,6 +33,7 @@ INSTALLED_APPS = [
     "drugs",
     "orders",
     "corsheaders",  # CORS headers added
+    "rest_framework",
 ]
 
 # Middleware settings (ensure correct comma placement)
