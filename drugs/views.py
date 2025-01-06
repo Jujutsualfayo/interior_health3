@@ -1,21 +1,20 @@
-from django.contrib.auth.decorators import login_required 
-from django.shortcuts import render, redirect
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+from rest_framework import status
 from .models import Drug
-from .forms import DrugForm 
+from .serializers import DrugSerializer
 
-# View to display the list of drugs and handle drug addition
-@login_required 
-def drug_list(request):
-    if request.method == 'POST':
-        form = DrugForm(request.POST, request.FILES)  # Handle the form submission (including file uploads)
-        if form.is_valid():
-            form.save()  # Save the new drug
-            return redirect('drugs:drug_list')  # Redirect to the same page after successful submission
-    else:
-        form = DrugForm()  # Display an empty form when the page is loaded
-    
-    # Fetch all drugs from the database, even if none exist
-    drugs = Drug.objects.all()
-    
-    # Pass both the drug list and form to the template, ensuring drugs is never None
-    return render(request, 'drugs/drug_list.html', {'drugs': drugs, 'form': form})
+# API view to handle the list of drugs and drug creation
+@api_view(['GET', 'POST'])
+def drug_list_api(request):
+    if request.method == 'GET':
+        drugs = Drug.objects.all()
+        serializer = DrugSerializer(drugs, many=True)
+        return Response(serializer.data)  # Return the list of drugs in JSON format
+
+    elif request.method == 'POST':
+        serializer = DrugSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()  # Save the new drug
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
