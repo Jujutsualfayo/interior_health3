@@ -50,6 +50,9 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = "interior_health3.urls"
 
+LOGIN_URL = '/users/login/'  # Matches the login view path in users/urls.py
+
+
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
