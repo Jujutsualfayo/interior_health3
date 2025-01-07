@@ -3,15 +3,13 @@ from django.urls import reverse
 from django.contrib.auth import get_user_model
 from drugs.models import Drug
 from .models import Order
+from django.contrib.auth.models import User
 
 
 class OrderTests(TestCase):
     def setUp(self):
-        # Create a test user
-        self.user = get_user_model().objects.create_user(
-            username='testuser',
-            password='password123'
-        )
+        # Create a user instance
+        self.user = User.objects.create_user(username='testuser', password='testpassword')
 
         # Create a test drug
         self.drug = Drug.objects.create(
