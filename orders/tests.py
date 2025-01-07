@@ -9,7 +9,7 @@ from orders.models import Order
 class OrderTests(TestCase):
     def setUp(self):
         # Create a user instance
-        self.user = User.objects.create_user(username='Benjaminotieno1', password='Alphafemale1')
+        self.user = User.objects.create_user(username='testuser', password='testpassword')
 
         # Create a test drug
         self.drug = Drug.objects.create(
