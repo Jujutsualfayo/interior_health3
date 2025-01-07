@@ -6,11 +6,7 @@ class LoginTests(TestCase):
     
     def setUp(self):
         # Create a test user for the login test
-        self.user = get_user_model().objects.create_user(
-            username='testuser',
-            password='testpassword',
-            email='testuser@example.com'
-        )
+        self.client.login(username='testuser', password='testpassword')
     
     def test_login_invalid_user(self):
         # Test login with invalid credentials
