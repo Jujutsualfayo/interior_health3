@@ -1,31 +1,103 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib import messages
+from .models import Order
+from drugs.models import Drug
 from django.contrib.auth.decorators import login_required
 from django.db import transaction
 import logging
-from .models import Order
 
+# Create a logger object
 logger = logging.getLogger(__name__)
+
+# Set the logging level
+logger.setLevel(logging.DEBUG)
+
+# Create a console handler and set level to debug
+ch = logging.StreamHandler()
+ch.setLevel(logging.DEBUG)
+
+# Create a formatter and add it to the handler
+formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
+ch.setFormatter(formatter)
+
+# Add the handler to the logger
+logger.addHandler(ch)
+
+@login_required
+def order_list(request):
+    """View to list all orders made by the logged-in user."""
+    orders = Order.objects.filter(user=request.user)
+    return render(request, 'orders/order_list.html', {'orders': orders})
+
+@login_required
+@transaction.atomic
+def place_order(request, drug_id=None):
+    drug = get_object_or_404(Drug, id=drug_id) if drug_id else None
+    if request.method == 'POST':
+        selected_drug_id = request.POST.get('drug')
+        quantity = int(request.POST.get('quantity', 0))
+        drug = get_object_or_404(Drug, id=selected_drug_id) if not drug else drug
+        if quantity <= 0:
+            messages.error(request, 'Quantity must be greater than 0.')
+        elif quantity > drug.stock_quantity:
+            messages.error(request, 'Insufficient stock.')
+        else:
+            total_price = drug.price * quantity
+            Order.objects.create(
+                user=request.user,
+                drug=drug,
+                quantity=quantity,
+                total_price=total_price
+            )
+            drug.stock_quantity -= quantity
+            drug.save()
+            messages.success(request, 'Order placed successfully!')
+            return redirect('orders:order_list')
+    drugs = Drug.objects.filter(stock_quantity__gt=0)
+    return render(request, 'orders/place_order.html', {'drug': drug, 'drugs': drugs})
 
 @login_required
 @transaction.atomic
 def cancel_order(request, pk):
+    """Cancel an order and update its status."""
     # Retrieve the order object, making sure it's associated with the logged-in user
     order = get_object_or_404(Order, id=pk, user=request.user)
     
     if request.method == 'POST':
-        # Log the initial stock quantity for debugging
-        logger.debug(f"Stock before cancel: {order.drug.stock_quantity}")
+        drug = order.drug
+
+        # Log the stock value before canceling
+        logger.debug(f"Stock before cancel: {drug.stock_quantity}")
 
         if order.status != 'CANCELED':
-            # Log the action of restoring stock if it's not already canceled
-            logger.debug(f"Restoring stock for order with quantity {order.quantity}")
-            # If stock is managed elsewhere, we don't alter it here
+            # Log the action of canceling the order
+            logger.debug(f"Cancelling order with ID {order.id} and drug {drug.name}")
+            # Optionally, if stock is handled elsewhere, skip the modification here
+            # If you have stock management handled elsewhere, you may skip the stock restoration logic.
 
             # Update the order's status to 'CANCELED'
             order.status = 'CANCELED'
             order.save()
 
-            # Log the final status of the order
-            logger.debug(f"Order with id {order.id} has been canceled, status updated to: {order.status}")
-            
-    return render(request, 'order/cancel_order_confirmation.html', {'order': order})
+            # Log the action after updating the order status
+            logger.debug(f"Order with ID {order.id} has been canceled, status updated to: {order.status}")
+
+            messages.success(request, 'Order canceled successfully.')
+        else:
+            messages.warning(request, 'This order has already been canceled.')
+
+        return redirect('orders:order_list')
+    
+    return render(request, 'orders/cancel_order.html', {'order': order})
+
+@login_required
+def order_detail(request, pk):
+    """View to display details of a specific order."""
+    order = get_object_or_404(Order, id=pk, user=request.user)
+    return render(request, 'orders/order_detail.html', {'order': order})
+
+@login_required
+def order_history(request):
+    """View to show order history of the logged-in user."""
+    orders = Order.objects.filter(user=request.user)
+    return render(request, 'orders/order_history.html', {'orders': orders})
