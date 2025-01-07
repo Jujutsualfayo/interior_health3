@@ -2,8 +2,8 @@ from django.test import TestCase
 from django.urls import reverse
 from django.contrib.auth import get_user_model
 from drugs.models import Drug
-from .models import Order
 from django.contrib.auth.models import User
+from orders.models import Order
 
 
 class OrderTests(TestCase):
@@ -22,8 +22,8 @@ class OrderTests(TestCase):
             stock_quantity=50
         )
 
-        # Log in the test user
-        self.client.login(username='testuser', password='password123')
+        # Log in the test user (password should match the one set for the user)
+        self.client.login(username='testuser', password='testpassword')
 
         # Create a test order
         self.order = Order.objects.create(
