@@ -2,6 +2,9 @@ from django.db import models
 from users.models import User
 from django.conf import settings  
 from drugs.models import Drug  
+from django.contrib.auth import get_user_model
+User = get_user_model()
+
 
 class Order(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='orders')
