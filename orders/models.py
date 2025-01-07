@@ -14,7 +14,6 @@ class Order(models.Model):
     def __str__(self):
         return f"Order #{self.id} by {self.user.username}"
 
-
     def save(self, *args, **kwargs):
         self.total_price = self.quantity * self.drug.price  # Assuming Drug has a 'price' field
         super().save(*args, **kwargs)

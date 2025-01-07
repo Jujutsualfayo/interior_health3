@@ -32,8 +32,7 @@ class OrderTests(TestCase):
             user=self.user,
             drug=self.drug,
             quantity=2,
-            total_price=31.00,
-            status='PENDING'
+            status='Pending'  # Capitalized status
         )
 
     # Model Tests
@@ -43,7 +42,7 @@ class OrderTests(TestCase):
         self.assertEqual(self.order.drug, self.drug)
         self.assertEqual(self.order.quantity, 2)
         self.assertAlmostEqual(self.order.total_price, 31.00, places=2)
-        self.assertEqual(self.order.status, 'PENDING')
+        self.assertEqual(self.order.status, 'Pending')
 
     def test_order_str_representation(self):
         """Test the string representation of the Order model."""
