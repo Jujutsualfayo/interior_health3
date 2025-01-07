@@ -5,28 +5,28 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>{% block title %}Interior Health{% endblock %}</title>
   {% load static %}
-  {% load custom_filters %} <!-- Load your custom filters -->
+  {% load custom_filters %}
 
-  <!-- Ensure the favicon.ico is placed correctly in the static folder -->
+  <!-- Favicon -->
   <link rel="icon" href="{% static 'images/favicon_io/myicon.ico' %}" type="image/x-icon">
-  
-  <!-- Link to the main stylesheet -->
+
+  <!-- Main stylesheet -->
   <link rel="stylesheet" href="{% static 'css/styles.css' %}">
-  
-  <!-- Block for additional stylesheets specific to certain pages (like drugs.css) -->
+
+  <!-- Extra stylesheets -->
   {% block extra_css %}{% endblock %}
 </head>
 <body>
   <header>
     <nav>
       <ul>
+        <li><a href="{% url 'global_home' %}">Home</a></li>
         <li><a href="{% url 'users:login' %}">Login</a></li>
         <li><a href="{% url 'users:register' %}">Register</a></li>
         <li><a href="{% url 'users:profile' %}">Profile</a></li>
-        <li><a href="{% url 'drugs:drug_list_api' %}">Drugs</a></li>
+        <li><a href="{% url 'drugs:drug_list' %}">Drugs</a></li>
         <li><a href="{% url 'orders:order_list' %}">Orders</a></li>
-        
-        <!-- Conditional rendering for role-based dashboards -->
+
         {% if user.is_authenticated %}
           {% if user|is_admin %}
             <li><a href="{% url 'users:admin_dashboard' %}">Admin Dashboard</a></li>
@@ -40,12 +40,16 @@
       </ul>
     </nav>
   </header>
+  
   <main>
-    {% block content %}
-    {% endblock %}
+    {% block content %}{% endblock %}
   </main>
+
   <footer>
-    <p>&copy; 2024 Interior Health. All rights reserved.</p>
+    <p>&copy; 2025 Interior Health. All rights reserved.</p>
   </footer>
+
+  <!-- Extra scripts -->
+  {% block extra_js %}{% endblock %}
 </body>
 </html>
