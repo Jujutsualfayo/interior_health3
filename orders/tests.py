@@ -24,6 +24,7 @@ class OrderTests(TestCase):
 
         # Log in the test user (password should match the one set for the user)
         self.client.login(username='testuser', password='testpassword')
+        self.user.save()
 
         # Create a test order
         self.order = Order.objects.create(
