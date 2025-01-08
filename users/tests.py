@@ -22,7 +22,7 @@ class LoginTests(TestCase):
         # Test login with valid credentials
         url = reverse('users:login')
         data = {'username': 'testuser', 'password': 'testpassword'}
-        
+
         response = self.client.post(url, data)
         
         # Check if the user is redirected to the home page after login
