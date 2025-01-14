@@ -74,14 +74,15 @@ WSGI_APPLICATION = "interior_health3.wsgi.application"
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
+        'ENGINE': 'django.db.backends.mysql',
         'NAME': 'interior_health_app',
         'USER': 'jujutsualfayo',
-        'PASSWORD': 'alphafemale1',
-        'HOST': 'localhost',  
-        'PORT': '5432',  
+        'PASSWORD': 'Alphafemale1',
+        'HOST': 'localhost',
+        'PORT': '3306',
     }
 }
+
 
 
 AUTH_PASSWORD_VALIDATORS = [
