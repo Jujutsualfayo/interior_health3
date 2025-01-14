@@ -76,7 +76,7 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'interior_health_app',
-        'USER': 'jujutsualfayo',
+        'USER': 'root',
         'PASSWORD': 'Alphafemale1',
         'HOST': 'localhost',
         'PORT': '3306',
