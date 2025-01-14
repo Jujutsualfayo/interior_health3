@@ -74,17 +74,11 @@ WSGI_APPLICATION = "interior_health3.wsgi.application"
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'interior_health_app',
-        'USER': 'root',
-        'PASSWORD': 'Alphafemale1',
-        'HOST': 'localhost',
-        'PORT': '',
-        'OPTIONS': {
-            'unix_socket': '/var/run/mysqld/mysqld.sock',
-        },
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
+
 
 
 
