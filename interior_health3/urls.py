@@ -11,8 +11,13 @@ urlpatterns = [
     path('', global_home, name='global_home'),
     path('admin/', admin.site.urls),
     path('users/', include('users.urls')),
-    path('drugs/', include('drugs.urls')),  # This will now include the API endpoint at /drugs/api/drugs/
-    path('orders/', include('orders.urls')),
+    path('drugs/', include('drugs.urls')),  
+    path('orders/', include('orders.urls')),  
+
+    # API routes
+    path('api/drugs/', include('drugs.urls')),  # Assuming your drugs app has API views
+    path('api/orders/', include('orders.urls')),  # This will include the API endpoints for orders
+    path('api/users/', include('users.urls')),  # Assuming your users app has API views
 ]
 
 if settings.DEBUG:

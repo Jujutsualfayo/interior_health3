@@ -5,6 +5,12 @@ from drugs.models import Drug
 from django.contrib.auth.decorators import login_required
 from django.db import transaction
 import logging
+from rest_framework import viewsets, status
+from rest_framework.decorators import action
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
+from .serializers import OrderSerializer
+from rest_framework.views import APIView
 
 # Create a logger object
 logger = logging.getLogger(__name__)
@@ -60,34 +66,19 @@ def place_order(request, drug_id=None):
 @transaction.atomic
 def cancel_order(request, pk):
     """Cancel an order and update its status."""
-    # Retrieve the order object, making sure it's associated with the logged-in user
     order = get_object_or_404(Order, id=pk, user=request.user)
-    
     if request.method == 'POST':
         drug = order.drug
-
-        # Log the stock value before canceling
         logger.debug(f"Stock before cancel: {drug.stock_quantity}")
-
         if order.status != 'CANCELED':
-            # Log the action of canceling the order
             logger.debug(f"Cancelling order with ID {order.id} and drug {drug.name}")
-            # Optionally, if stock is handled elsewhere, skip the modification here
-            # If you have stock management handled elsewhere, you may skip the stock restoration logic.
-
-            # Update the order's status to 'CANCELED'
             order.status = 'CANCELED'
             order.save()
-
-            # Log the action after updating the order status
             logger.debug(f"Order with ID {order.id} has been canceled, status updated to: {order.status}")
-
             messages.success(request, 'Order canceled successfully.')
         else:
             messages.warning(request, 'This order has already been canceled.')
-
         return redirect('orders:order_list')
-    
     return render(request, 'orders/cancel_order.html', {'order': order})
 
 @login_required
@@ -101,3 +92,26 @@ def order_history(request):
     """View to show order history of the logged-in user."""
     orders = Order.objects.filter(user=request.user)
     return render(request, 'orders/order_history.html', {'orders': orders})
+
+# API views
+
+class OrderViewSet(viewsets.ModelViewSet):
+    """API view for managing orders."""
+    queryset = Order.objects.all()
+    serializer_class = OrderSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        """Filter orders for the logged-in user."""
+        return self.queryset.filter(user=self.request.user)
+
+    @action(detail=True, methods=['post'])
+    def cancel(self, request, pk=None):
+        """API action to cancel an order."""
+        order = self.get_object()
+        if order.status != 'CANCELED':
+            order.status = 'CANCELED'
+            order.save()
+            return Response({'status': 'Order canceled'}, status=status.HTTP_200_OK)
+        else:
+            return Response({'status': 'Order already canceled'}, status=status.HTTP_400_BAD_REQUEST)
