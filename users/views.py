@@ -75,22 +75,28 @@ def profile(request):
     """
     Handles user profile updates and ensures a profile exists for the logged-in user.
     """
-    if not hasattr(request.user, 'profile'):
-        Profile.objects.create(user=request.user)
+    user = request.user  # Resolves the lazy object to an actual User instance
+    # Ensure the user has a profile
+    if not hasattr(user, 'profile'):
+        Profile.objects.create(user=user)
 
     if request.method == 'POST':
-        user_form = UserUpdateForm(request.POST, instance=request.user)
-        profile_form = ProfileUpdateForm(request.POST, request.FILES, instance=request.user.profile)
+        user_form = UserUpdateForm(request.POST, instance=user)
+        profile_form = ProfileUpdateForm(request.POST, request.FILES, instance=user.profile)
         if user_form.is_valid() and profile_form.is_valid():
             user_form.save()
             profile_form.save()
             messages.success(request, 'Your profile has been updated!')
             return redirect('users:profile')
     else:
-        user_form = UserUpdateForm(instance=request.user)
-        profile_form = ProfileUpdateForm(instance=request.user.profile)
+        user_form = UserUpdateForm(instance=user)
+        profile_form = ProfileUpdateForm(instance=user.profile)
 
-    return render(request, 'users/profile.html', {'user_form': user_form, 'profile_form': profile_form})
+    return render(request, 'users/profile.html', {
+        'user_form': user_form,
+        'profile_form': profile_form
+    })
+
 
 @login_required
 @user_passes_test(lambda u: u.groups.filter(name='Admin').exists())
