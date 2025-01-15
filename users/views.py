@@ -4,12 +4,16 @@ from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib import messages
 from .forms import UserRegistrationForm, UserUpdateForm, ProfileUpdateForm
 from .models import Profile
-from django.contrib.auth.models import Group
+from django.contrib.auth.models import Group, User
+from rest_framework import viewsets, permissions
+from .serializers import UserSerializer
+from rest_framework.decorators import action
+from rest_framework.response import Response
 
+# Traditional views remain unchanged
 
 def home(request):
     return render(request, 'home.html')
-
 
 def register(request):
     """
@@ -44,7 +48,6 @@ def register(request):
         form = UserRegistrationForm()
     return render(request, 'users/register.html', {'form': form})
 
-
 def login_view(request):
     """
     Handles user login.
@@ -60,7 +63,6 @@ def login_view(request):
             return render(request, 'users/login.html', {'error': 'Invalid username or password.'})
     return render(request, 'users/login.html')
 
-
 def logout_view(request):
     """
     Logs out the user and redirects them to the login page.
@@ -68,13 +70,11 @@ def logout_view(request):
     logout(request)
     return redirect('users:login')
 
-
 @login_required
 def profile(request):
     """
     Handles user profile updates and ensures a profile exists for the logged-in user.
     """
-    # Ensure the user has a profile
     if not hasattr(request.user, 'profile'):
         Profile.objects.create(user=request.user)
 
@@ -90,35 +90,30 @@ def profile(request):
         user_form = UserUpdateForm(instance=request.user)
         profile_form = ProfileUpdateForm(instance=request.user.profile)
 
-    return render(request, 'users/profile.html', {
-        'user_form': user_form,
-        'profile_form': profile_form
-    })
+    return render(request, 'users/profile.html', {'user_form': user_form, 'profile_form': profile_form})
 
-
-# Role-Based Access Views
 @login_required
 @user_passes_test(lambda u: u.groups.filter(name='Admin').exists())
 def admin_dashboard(request):
-    """
-    Dashboard for Admin users only.
-    """
     return render(request, 'admin_dashboard.html')
-
 
 @login_required
 @user_passes_test(lambda u: u.groups.filter(name='Health Worker').exists())
 def health_worker_dashboard(request):
-    """
-    Dashboard for Health Workers only.
-    """
     return render(request, 'health_worker_dashboard.html')
-
 
 @login_required
 @user_passes_test(lambda u: u.groups.filter(name='Patient').exists())
 def patient_dashboard(request):
-    """
-    Dashboard for Patients only.
-    """
     return render(request, 'patient_dashboard.html')
+
+# API Views
+class UserViewSet(viewsets.ModelViewSet):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    @action(detail=False, methods=['get'])
+    def current_user(self, request):
+        serializer = self.get_serializer(request.user)
+        return Response(serializer.data)
