@@ -20,6 +20,29 @@ def drug_list_api(request):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+# API view to handle getting, updating, and deleting a single drug
+@api_view(['GET', 'PUT', 'DELETE'])
+def drug_detail_api(request, pk):
+    try:
+        drug = Drug.objects.get(pk=pk)
+    except Drug.DoesNotExist:
+        return Response({'error': 'Drug not found'}, status=status.HTTP_404_NOT_FOUND)
+
+    if request.method == 'GET':
+        serializer = DrugSerializer(drug)
+        return Response(serializer.data)
+
+    elif request.method == 'PUT':
+        serializer = DrugSerializer(drug, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    elif request.method == 'DELETE':
+        drug.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
 # View to render the drug list in HTML
 def drug_list_view(request):
     drugs = Drug.objects.all()
