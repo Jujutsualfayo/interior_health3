@@ -4,6 +4,7 @@ from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib import messages
 from .forms import UserRegistrationForm, UserUpdateForm, ProfileUpdateForm
 from .models import Profile
+from django.contrib.auth import get_user
 from django.contrib.auth.models import Group, User
 from rest_framework import viewsets, permissions
 from .serializers import UserSerializer
@@ -75,7 +76,8 @@ def profile(request):
     """
     Handles user profile updates and ensures a profile exists for the logged-in user.
     """
-    user = request.user  # Resolves the lazy object to an actual User instance
+    user = get_user(request)  # Force resolving to a User instance
+
     # Ensure the user has a profile
     if not hasattr(user, 'profile'):
         Profile.objects.create(user=user)
