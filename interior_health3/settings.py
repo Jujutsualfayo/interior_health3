@@ -15,7 +15,7 @@ CSRF_TRUSTED_ORIGINS = [
 
 # Add CORS allowed origins
 CORS_ALLOWED_ORIGINS = [
-    "http://localhost:5173",  # Frontend URL
+    'http://localhost:3000',  # Frontend URL
 ]
 
 CORS_ALLOW_ALL_ORIGINS = True
