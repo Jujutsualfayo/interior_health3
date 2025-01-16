@@ -1,6 +1,6 @@
 // src/pages/Home.js
 import React from 'react';
-import DrugList from '../components/DrugList';
+import DrugList from '../components/DrugList.js';
 
 const Home = () => {
   return (
