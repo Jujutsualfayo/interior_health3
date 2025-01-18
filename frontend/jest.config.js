@@ -1,5 +1,5 @@
 // jest.config.js
-module.exports = {
+export default {
   preset: 'react-scripts',
   transform: {
     '^.+\\.[t|j]sx?$': 'babel-jest',
