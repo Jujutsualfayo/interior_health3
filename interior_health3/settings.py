@@ -33,7 +33,7 @@ INSTALLED_APPS = [
     "users",
     "drugs",
     "orders",
-    "corsheaders",  # CORS headers added
+    "corsheaders",  
     "rest_framework",
     "channels",
 ]
