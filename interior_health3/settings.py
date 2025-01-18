@@ -35,6 +35,7 @@ INSTALLED_APPS = [
     "orders",
     "corsheaders",  
     "rest_framework",
+    "rest_framework_simplejwt"
     "channels",
 ]
 

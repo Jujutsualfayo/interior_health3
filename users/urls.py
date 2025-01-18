@@ -19,5 +19,7 @@ urlpatterns = [
     path('health-worker/dashboard/', views.health_worker_dashboard, name='health_worker_dashboard'),
     path('patient/dashboard/', views.patient_dashboard, name='patient_dashboard'),
     # API routes
-    path('', include(router.urls)),  # Include the API routes registered in the router
+    path('', include(router.urls)), 
+    path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'), 
 ]
