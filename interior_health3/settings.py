@@ -35,6 +35,7 @@ INSTALLED_APPS = [
     "orders",
     "corsheaders",  # CORS headers added
     "rest_framework",
+    "channels",
 ]
 
 # Middleware settings (ensure correct comma placement)
@@ -71,6 +72,18 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = "interior_health3.wsgi.application"
+
+ASGI_APPLICATION = "interior_health3.asgi.application"
+
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+            "hosts": [('127.0.0.1', 6379)],
+        },
+    },
+}
+
 
 DATABASES = {
     'default': {
