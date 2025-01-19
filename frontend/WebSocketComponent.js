@@ -5,7 +5,7 @@ function WebSocketComponent() {
   const [socket, setSocket] = useState(null);
 
   useEffect(() => {
-    const webSocket = new WebSocket('ws://localhost:8000/ws/orders/');
+    const webSocket = new WebSocket('wss://cuddly-funicular-4jjv5xg9p7vg35xg5-3000.app.github.dev:3000/ws');
 
     webSocket.onopen = () => {
       console.log('WebSocket is open now.');
@@ -15,6 +15,10 @@ function WebSocketComponent() {
       const data = JSON.parse(event.data);
       console.log('Received:', data);
       setMessage(data.message);
+    };
+
+    webSocket.onerror = (error) => {
+      console.error('WebSocket error:', error);
     };
 
     webSocket.onclose = () => {
