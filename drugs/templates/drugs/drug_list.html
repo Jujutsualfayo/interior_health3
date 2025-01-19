@@ -17,7 +17,7 @@
 
           <!-- Allow admins and patients to place an order -->
           {% if user|is_admin or user|is_patient %}
-            <a href="{% url 'orders:place_order_with_drug' drug.id %}">Place Order</a>
+            <a href="{% url 'orders:place_order_with_drug' drug.id %}" class="btn-order">Place Order</a>
           {% endif %}
         </li>
       {% endfor %}
