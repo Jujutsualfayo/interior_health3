@@ -16,7 +16,7 @@
           {{ drug.name }} - ${{ drug.price }} ({{ drug.stock_quantity }} available)
 
           <!-- Allow admins and patients to place an order -->
-          {% if user|is_admin or user|is_patient %}
+          {% if is_admin or is_patient %}
             <a href="{% url 'orders:place_order_with_drug' drug.id %}" class="btn-order">Place Order</a>
           {% endif %}
         </li>

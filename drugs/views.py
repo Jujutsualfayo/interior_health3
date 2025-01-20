@@ -1,9 +1,16 @@
 from django.shortcuts import render
+from django.shortcuts import redirect
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
 from .models import Drug
 from .serializers import DrugSerializer
+
+
+def place_order_with_drug(request, drug_id):
+    # Logic to create an order
+    # After order creation, redirect to the order detail page
+    return redirect('orders:order_detail', args=[drug_id])
 
 # API view to handle the list of drugs and drug creation
 @api_view(['GET', 'POST'])
