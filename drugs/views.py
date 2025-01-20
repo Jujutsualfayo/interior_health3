@@ -46,4 +46,12 @@ def drug_detail_api(request, pk):
 # View to render the drug list in HTML
 def drug_list_view(request):
     drugs = Drug.objects.all()
-    return render(request, 'drugs/drug_list.html', {'drugs': drugs})
+    is_admin = request.user.is_staff
+    is_patient = request.user.groups.filter(name='Patients').exists()
+
+    # Debug print statements to log user and their roles
+    print(f"User: {request.user}")
+    print(f"Is Admin: {is_admin}")
+    print(f"Is Patient: {is_patient}")
+
+    return render(request, 'drugs/drug_list.html', {'drugs': drugs, 'is_admin': is_admin, 'is_patient': is_patient})
