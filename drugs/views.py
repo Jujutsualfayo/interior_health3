@@ -9,13 +9,17 @@ from .serializers import DrugSerializer
 
 
 def place_order_with_drug(request, drug_id):
+    # Check if the user is in the 'Patients' group
+    if not request.user.groups.filter(name='Patients').exists():
+        return redirect('home')  # Redirect to the home page if not a patient
+
     # Get the drug
     drug = Drug.objects.get(id=drug_id)
-    
-    # Create the order (make sure you're saving the order in the database)
+
+    # Create the order
     order = Order.objects.create(drug=drug, user=request.user)
 
-    # Redirect to the order detail page after the order is placed
+    # Redirect to the order detail page
     return redirect('orders:order_detail', order_id=order.id)
 
 # API view to handle the list of drugs and drug creation
