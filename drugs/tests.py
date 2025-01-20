@@ -1,8 +1,6 @@
 from django.test import TestCase
 from django.urls import reverse
-from users.models import User  
-from django.contrib.auth.models import User
-from django.contrib.auth.models import Group
+from django.contrib.auth.models import User, Group
 from .models import Drug
 from orders.models import Order
 
@@ -71,6 +69,17 @@ class DrugListViewTest(TestCase):
         self.assertEqual(response.status_code, 302)  # Check if it's a redirect
         # Use the correct order detail page URL
         self.assertRedirects(response, reverse('orders:order_detail', args=[self.drug1.id]))
+
+    def test_redirect_to_home_for_non_patient(self):
+        # Log in as a non-patient user (testuser)
+        self.client.login(username='testuser', password='password123')
+        
+        # Attempt to access the "Place Order" page for a drug
+        response = self.client.get(reverse('orders:place_order_with_drug', args=[self.drug1.id]))
+        
+        # Check if the response is a redirect to the home page (as they are not a patient)
+        self.assertEqual(response.status_code, 302)
+        self.assertRedirects(response, reverse('home'))
 
     def test_place_order_button_not_visible_for_non_patient_and_non_admin(self):
         # Log in as a normal user (not admin or patient)
