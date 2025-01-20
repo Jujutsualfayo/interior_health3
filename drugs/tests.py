@@ -1,6 +1,7 @@
 from django.test import TestCase
 from django.urls import reverse
 from users.models import User  # Assuming your custom User model is here
+from django.contrib.auth.models import Group
 from .models import Drug
 from orders.models import Order  # Assuming you have an Order model in the 'orders' app
 
@@ -11,6 +12,11 @@ class DrugListViewTest(TestCase):
         
         # Create admin user for testing "Place Order" visibility for admins
         self.admin_user = User.objects.create_user(username='adminuser', password='password123', is_staff=True)
+        
+        # Create patient user and add to 'Patients' group
+        self.patient_user = User.objects.create_user(username='patientuser', password='password123')
+        patients_group, created = Group.objects.get_or_create(name='Patients')
+        self.patient_user.groups.add(patients_group)
         
         # Create some drugs for testing
         self.drug1 = Drug.objects.create(name='Aspirin', price=5.99, stock_quantity=50)
@@ -30,12 +36,11 @@ class DrugListViewTest(TestCase):
         self.assertContains(response, 'Aspirin')
         self.assertContains(response, 'Ibuprofen')
         
-        # Check if the "Place Order" button is visible for the user
-        self.assertContains(response, 'Place Order')
+        # Check if the "Place Order" button is NOT visible for a normal user
+        self.assertNotContains(response, 'Place Order')
 
     def test_place_order_button_for_patient(self):
         # Log in as a patient
-        patient_user = User.objects.create_user(username='patientuser', password='password123')
         self.client.login(username='patientuser', password='password123')
         
         # Access the drug list view
@@ -56,7 +61,6 @@ class DrugListViewTest(TestCase):
 
     def test_redirect_to_place_order_page(self):
         # Log in as a patient user
-        patient_user = User.objects.create_user(username='patientuser', password='password123')
         self.client.login(username='patientuser', password='password123')
         
         # Get the "Place Order" button for the drug
@@ -65,7 +69,7 @@ class DrugListViewTest(TestCase):
         # Check if the redirect is correct (this should be the order placement page)
         self.assertEqual(response.status_code, 200)  # Assuming the order form loads successfully
 
-    def test_place_order_button_not_visible_for_other_users(self):
+    def test_place_order_button_not_visible_for_non_patient_and_non_admin(self):
         # Log in as a normal user (not admin or patient)
         self.client.login(username='testuser', password='password123')
         
