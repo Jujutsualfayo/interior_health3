@@ -1,9 +1,10 @@
 from django.test import TestCase
 from django.urls import reverse
-from users.models import User  # Assuming your custom User model is here
+from users.models import User  
+from django.contrib.auth.models import User
 from django.contrib.auth.models import Group
 from .models import Drug
-from orders.models import Order  # Assuming you have an Order model in the 'orders' app
+from orders.models import Order
 
 class DrugListViewTest(TestCase):
     def setUp(self):
@@ -67,7 +68,9 @@ class DrugListViewTest(TestCase):
         response = self.client.get(reverse('orders:place_order_with_drug', args=[self.drug1.id]))
         
         # Check if the redirect is correct (this should be the order placement page)
-        self.assertEqual(response.status_code, 200)  # Assuming the order form loads successfully
+        self.assertEqual(response.status_code, 302)  # Check if it's a redirect
+        # Use the correct order detail page URL
+        self.assertRedirects(response, reverse('orders:order_detail', args=[self.drug1.id]))
 
     def test_place_order_button_not_visible_for_non_patient_and_non_admin(self):
         # Log in as a normal user (not admin or patient)
