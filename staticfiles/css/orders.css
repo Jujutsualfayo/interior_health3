@@ -1,188 +1,183 @@
-/* Global styles for orders pages */
+/* General styles for the page */
 body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background-color: #eaf4f4;
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
     color: #333;
-    line-height: 1.6;
-  }
-  
-  h2 {
+    margin: 0;
+    padding: 0;
+}
+
+h2 {
     color: #2c3e50;
+    font-size: 2rem;
     text-align: center;
-    margin-bottom: 20px;
-    font-size: 2em;
-    font-weight: bold;
-  }
-  
-  p {
-    text-align: center;
-    margin: 10px 0;
-    color: #555;
-    font-size: 1.1em;
-  }
-  
-  a {
-    color: #28a745;
-    text-decoration: none;
-    font-weight: bold;
-  }
-  
-  a:hover {
-    text-decoration: underline;
-    color: #218838;
-  }
-  
-  /* Order page container */
-  .page-container {
-    max-width: 800px;
-    margin: 50px auto;
-    background: #ffffff;
-    padding: 25px;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  }
-  
-  /* Specific styles for the order list page */
-  .order-list ul {
+    margin-top: 20px;
+}
+
+/* Drug list section */
+ul {
     list-style-type: none;
     padding: 0;
-    margin: 0;
-  }
-  
-  .order-list li {
-    background-color: #f9f9f9;
+    margin-top: 20px;
+}
+
+li {
+    background-color: #fff;
     padding: 15px;
     margin: 10px 0;
-    border-radius: 5px;
+    border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  }
-  
-  .order-list li:hover {
-    background-color: #eaf4f4;
-  }
-  
-  .order-list .order-details {
-    font-size: 1.1em;
+}
+
+li:hover {
+    background-color: #ecf0f1;
+}
+
+li span {
+    font-weight: bold;
+    color: #2c3e50;
+}
+
+li .price {
+    color: #f39c12; /* Orange price */
+}
+
+li .stock-quantity {
+    color: #e67e22; /* Stock color stays the same */
+}
+
+/* "Place Order" Button */
+.btn-order {
+    display: inline-block;
+    padding: 12px 24px;
     margin-top: 10px;
-  }
-  
-  .order-list .order-actions {
-    margin-top: 20px;
-  }
-  
-  .order-list .order-actions a {
-    background-color: #28a745;
+    background-color: #e67e22; /* Orange background */
     color: white;
-    padding: 8px 15px;
-    border-radius: 5px;
     text-decoration: none;
-    font-size: 1em;
-    margin-right: 10px;
-  }
-  
-  .order-list .order-actions a:hover {
-    background-color: #218838;
-  }
-  
-  /* Order detail page */
-  .order-detail .order-details {
-    margin-top: 20px;
-  }
-  
-  .order-detail .cancel-order-btn {
-    background-color: red;
-    color: white;
-    padding: 12px 20px;
     border-radius: 5px;
-    cursor: pointer;
-    font-size: 1.1em;
     text-align: center;
-    margin-top: 20px;
-  }
-  
-  .order-detail .cancel-order-btn:hover {
-    background-color: darkred;
-  }
-  
-  .order-detail .back-link {
-    margin-top: 20px;
+    font-size: 1rem;
+    transition: background-color 0.3s ease;
+}
+
+.btn-order:hover {
+    background-color: #d35400; /* Darker orange for hover effect */
+}
+
+.btn-order:focus {
+    outline: none;
+    border-color: #d35400;
+}
+
+/* Add a new drug form */
+form {
+    background-color: #fff;
+    padding: 20px;
+    margin-top: 40px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    max-width: 500px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+form h3 {
+    color: #34495e;
+    font-size: 1.6rem;
+    text-align: center;
+}
+
+form label {
     display: block;
-    text-align: center;
-    font-size: 1.1em;
-    color: #28a745;
-    font-weight: bold;
-  }
-  
-  .order-detail .back-link:hover {
-    text-decoration: underline;
-    color: #218838;
-  }
-  
-  /* Cancel order page */
-  .cancel-order .confirm-cancel-btn {
-    background-color: red;
-    color: white;
-    padding: 12px 20px;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 1.1em;
-    text-align: center;
-    margin-top: 20px;
-  }
-  
-  .cancel-order .confirm-cancel-btn:hover {
-    background-color: darkred;
-  }
-  
-  .cancel-order .go-back-link {
-    margin-top: 20px;
-    display: block;
-    text-align: center;
-    font-size: 1.1em;
-    color: #28a745;
-    font-weight: bold;
-  }
-  
-  .cancel-order .go-back-link:hover {
-    text-decoration: underline;
-    color: #218838;
-  }
-  
-  /* Place order page */
-  .place-order .form-control {
+    margin-bottom: 8px;
+    font-size: 1rem;
+    color: #2c3e50;
+}
+
+form input,
+form select,
+form button {
     width: 100%;
-    padding: 12px;
-    margin: 10px 0;
+    padding: 10px;
+    margin-bottom: 15px;
+    border-radius: 5px;
     border: 1px solid #ccc;
-    border-radius: 5px;
-    font-size: 1em;
-  }
-  
-  .place-order .place-order-btn {
-    width: 100%;
-    margin-top: 20px;
-    background-color: #28a745;
-    color: white;
-    padding: 12px;
-    border-radius: 5px;
-    font-size: 1.1em;
+    font-size: 1rem;
+}
+
+form input[type="text"],
+form input[type="number"],
+form input[type="file"] {
+    background-color: #f9f9f9;
+}
+
+form input[type="text"]:focus,
+form input[type="number"]:focus,
+form select:focus,
+form button:focus {
+    border-color: #e67e22; /* Orange focus border */
+    outline: none;
+}
+
+form button {
+    background-color: #e67e22; /* Orange background */
+    color: #fff;
+    font-weight: bold;
     cursor: pointer;
-  }
-  
-  .place-order .place-order-btn:hover {
-    background-color: #218838;
-  }
-  
-  .place-order .quantity-error {
-    color: red;
-    font-size: 0.9em;
+    transition: background-color 0.3s ease;
+}
+
+form button:hover {
+    background-color: #d35400; /* Darker orange on hover */
+}
+
+/* Message if no drugs available */
+p {
     text-align: center;
-    margin-top: 10px;
-  }
-  
-  .place-order .quantity-input {
-    max-width: 150px;
-    margin: 0 auto;
-    display: block;
-  }
-  
+    font-size: 1.2rem;
+    color: #e74c3c;
+    margin-top: 20px;
+}
+
+/* Media queries for responsiveness */
+@media (max-width: 768px) {
+    body {
+        padding: 20px;
+    }
+
+    ul {
+        padding-left: 0;
+    }
+
+    li {
+        padding: 12px;
+    }
+
+    form {
+        padding: 15px;
+    }
+
+    form h3 {
+        font-size: 1.4rem;
+    }
+
+    form label {
+        font-size: 0.9rem;
+    }
+
+    form input,
+    form select,
+    form button {
+        padding: 8px;
+        font-size: 0.9rem;
+    }
+
+    form button {
+        font-size: 1rem;
+    }
+
+    .btn-order {
+        padding: 10px 20px;
+        font-size: 14px;
+    }
+}

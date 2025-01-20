@@ -1,4 +1,16 @@
 <!-- orders/templates/orders/order_history.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Orders</title>
+
+    <!-- Link to orders.css -->
+    <link rel="stylesheet" href="{% static 'css/orders.css' %}">
+</head>
+<body>
+
 <h2>Your Orders</h2>
 
 {% if orders %}
@@ -15,3 +27,6 @@
 {% else %}
     <p>You have no orders.</p>
 {% endif %}
+
+</body>
+</html>
