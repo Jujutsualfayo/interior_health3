@@ -4,7 +4,7 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
 from .models import Drug
-from .models import Order, Drug
+from orders.models import Order
 from .serializers import DrugSerializer
 
 
