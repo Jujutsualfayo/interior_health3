@@ -108,6 +108,25 @@ form button:hover {
     background-color: #2980b9;
 }
 
+/* Style for the Place Order button */
+.place-order-btn {
+    background-color: #4CAF50; /* Green */
+    color: white;
+    padding: 12px 24px;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    border-radius: 8px;
+    transition: background-color 0.3s ease;
+    display: inline-block;
+    text-align: center;
+    text-decoration: none;
+}
+
+.place-order-btn:hover {
+    background-color: #45a049;
+}
+
 /* Message if no drugs available */
 p {
     text-align: center;
@@ -151,5 +170,10 @@ p {
 
     form button {
         font-size: 1rem;
+    }
+
+    .place-order-btn {
+        padding: 10px 20px;
+        font-size: 14px;
     }
 }
