@@ -1,26 +1,29 @@
-from django.shortcuts import render
-from django.shortcuts import redirect
+from django.shortcuts import render, redirect
+from .models import Drug
+from orders.models import Order
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
-from .models import Drug
-from orders.models import Order
 from .serializers import DrugSerializer
 
 
 def place_order_with_drug(request, drug_id):
-    # Check if the user is in the 'Patients' group
+    # Ensure that only patients can place orders
     if not request.user.groups.filter(name='Patients').exists():
-        return redirect('home')  # Redirect to the home page if not a patient
+        return redirect('home')  # Redirect to home page if the user is not a patient
 
     # Get the drug
-    drug = Drug.objects.get(id=drug_id)
+    try:
+        drug = Drug.objects.get(id=drug_id)
+    except Drug.DoesNotExist:
+        return redirect('home')  # If drug does not exist, redirect to home
 
     # Create the order
     order = Order.objects.create(drug=drug, user=request.user)
 
     # Redirect to the order detail page
     return redirect('orders:order_detail', order_id=order.id)
+
 
 # API view to handle the list of drugs and drug creation
 @api_view(['GET', 'POST'])
@@ -36,6 +39,7 @@ def drug_list_api(request):
             serializer.save()  # Save the new drug
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 
 # API view to handle getting, updating, and deleting a single drug
 @api_view(['GET', 'PUT', 'DELETE'])
@@ -59,6 +63,7 @@ def drug_detail_api(request, pk):
     elif request.method == 'DELETE':
         drug.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
 
 # View to render the drug list in HTML
 def drug_list_view(request):
