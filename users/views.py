@@ -10,6 +10,7 @@ from rest_framework import viewsets, permissions
 from .serializers import UserSerializer
 from rest_framework.decorators import action
 from rest_framework.response import Response
+from django.views.generic import TemplateView
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
 

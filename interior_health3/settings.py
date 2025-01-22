@@ -1,27 +1,33 @@
 import os
 from pathlib import Path
 
+# Base directory
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = "%+pbbe50v8$^w$3qs)_i92w0x^anv4@rzp!x#zb5v41%g5vi9q"
-DEBUG = False
+# Secret key from environment variable
+SECRET_KEY = os.getenv("DJANGO_SECRET_KEY", "your-default-key-for-dev")  # Replace in production!
 
-ALLOWED_HOSTS = ['interiorhealth.herokuapp.com']
+# Debug mode
+DEBUG = os.getenv("DJANGO_DEBUG", "False") == "True"
 
+# Allowed Hosts
+ALLOWED_HOSTS = os.getenv("DJANGO_ALLOWED_HOSTS", "127.0.0.1,localhost").split(",")
+
+# Trusted CSRF origins
 CSRF_TRUSTED_ORIGINS = [
     'http://127.0.0.1:8000',
     'https://localhost:8000',
+    'https://your-production-domain.com',
 ]
 
-# Add CORS allowed origins
+# CORS Configuration
 CORS_ALLOWED_ORIGINS = [
-    'http://localhost:3000',  # Frontend URL
+    'http://localhost:3000',  # React local development
+    'https://your-production-domain.com',
 ]
+CORS_ALLOW_ALL_ORIGINS = DEBUG  # Allow all in dev only
 
-CORS_ALLOW_ALL_ORIGINS = True
-
-
-# Application definition
+# Installed apps
 INSTALLED_APPS = [
     "django.contrib.admin",
     "django.contrib.auth",
@@ -34,16 +40,17 @@ INSTALLED_APPS = [
     "orders",
     "corsheaders",
     "rest_framework",
-    "rest_framework_simplejwt",  
+    "rest_framework_simplejwt",
     "channels",
+    "whitenoise.runserver_nostatic",
 ]
 
-
-# Middleware settings (ensure correct comma placement)
+# Middleware
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
+    "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
-    "corsheaders.middleware.CorsMiddleware",  # Corrected with comma
+    "corsheaders.middleware.CorsMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
@@ -51,15 +58,14 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
 
+# URL configuration
 ROOT_URLCONF = "interior_health3.urls"
 
-LOGIN_URL = '/users/login/'  # Matches the login view path in users/urls.py
-
-
+# Templates
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'templates'],
+        'DIRS': [BASE_DIR / 'templates', BASE_DIR / 'frontend/build'],  # React build directory
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -72,10 +78,11 @@ TEMPLATES = [
     },
 ]
 
+# WSGI and ASGI configuration
 WSGI_APPLICATION = "interior_health3.wsgi.application"
-
 ASGI_APPLICATION = "interior_health3.asgi.application"
 
+# Channel Layers
 CHANNEL_LAYERS = {
     'default': {
         'BACKEND': 'channels_redis.core.RedisChannelLayer',
@@ -85,7 +92,7 @@ CHANNEL_LAYERS = {
     },
 }
 
-
+# Database
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
@@ -93,18 +100,7 @@ DATABASES = {
     }
 }
 
-# M-Pesa Configuration
-MPESA_ENV = 'sandbox'  # Change to 'production' when ready
-MPESA_CONSUMER_KEY = 'WLTwUZMRYuG0UhdnXRljFY0rS7XQIhK3DmCMGtkZKL3i8Wdv'
-MPESA_CONSUMER_SECRET = 'P2BG5FDs3IeEWNqNWKvncAGoO7mjGAFv4TYSySOw9ZkBXG3NtiylUgHfd8uu4SPF'
-MPESA_SHORTCODE = '174379'  # Business Shortcode
-MPESA_PASSKEY = 'bfb279f9aa9bdbcf158e97dd71a467cd2b290dcb7338b8bd6a83b894c603abc7'
-MPESA_BASE_URL = 'https://sandbox.safaricom.co.ke/' if MPESA_ENV == 'sandbox' else 'https://api.safaricom.co.ke/'
-
-
-
-
-
+# Authentication and Password Validation
 AUTH_PASSWORD_VALIDATORS = [
     {
         "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",
@@ -120,30 +116,36 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+# M-Pesa Configuration (Environment variables recommended)
+MPESA_ENV = os.getenv('MPESA_ENV', 'sandbox')
+MPESA_CONSUMER_KEY = os.getenv('MPESA_CONSUMER_KEY', 'your-default-key')
+MPESA_CONSUMER_SECRET = os.getenv('MPESA_CONSUMER_SECRET', 'your-default-secret')
+MPESA_SHORTCODE = os.getenv('MPESA_SHORTCODE', 'your-default-shortcode')
+MPESA_PASSKEY = os.getenv('MPESA_PASSKEY', 'your-default-passkey')
+MPESA_BASE_URL = 'https://sandbox.safaricom.co.ke/' if MPESA_ENV == 'sandbox' else 'https://api.safaricom.co.ke/'
+
+# Language, timezone, and localization
 LANGUAGE_CODE = "en-us"
 TIME_ZONE = "UTC"
-
 USE_I18N = True
 USE_TZ = True
 
+# Static and Media Files
 STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'static'),
-]
-
-INSTALLED_APPS += ['whitenoise.runserver_nostatic']
-MIDDLEWARE.insert(1, 'whitenoise.middleware.WhiteNoiseMiddleware')
 STATIC_ROOT = BASE_DIR / 'staticfiles'
+STATICFILES_DIRS = [
+    BASE_DIR / 'static',
+    BASE_DIR / 'frontend/build/static',  # React static files
+]
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
-
 MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_ROOT = BASE_DIR / 'media'
 
+# Default primary key field type
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
-# Security settings for production (optional, can be activated when going live)
+# Security settings for production
 if not DEBUG:
     SECURE_BROWSER_XSS_FILTER = True
     SECURE_CONTENT_TYPE_NOSNIFF = True
