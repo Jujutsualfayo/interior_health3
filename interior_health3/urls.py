@@ -3,6 +3,7 @@ from django.urls import path, include
 from django.shortcuts import render  # For rendering the global home page
 from django.conf import settings
 from django.conf.urls.static import static
+from .views import ReactAppView
 
 def global_home(request):
     return render(request, 'home.html')
@@ -16,6 +17,7 @@ urlpatterns = [
 
     # API routes
     path('api/drugs/', include('drugs.urls')),  # Assuming your drugs app has API views
+    path('', ReactAppView.as_view(), name='react-frontend'),
     path('api/orders/', include('orders.urls')),  # This will include the API endpoints for orders
     path('api/users/', include('users.urls')),  # Assuming your users app has API views
 ]
