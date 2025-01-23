@@ -1,0 +1,1 @@
+web: gunicorn interior_health3.wsgi --log-file -
