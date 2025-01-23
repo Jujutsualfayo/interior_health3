@@ -50,7 +50,7 @@ INSTALLED_APPS = [
 # Middleware
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
-    "whitenoise.middleware.WhiteNoiseMiddleware",
+    "whitenoise.middleware.WhiteNoiseMiddleware",  # Keep this line here
     "django.contrib.sessions.middleware.SessionMiddleware",
     "corsheaders.middleware.CorsMiddleware",
     "django.middleware.common.CommonMiddleware",
@@ -155,8 +155,4 @@ if not DEBUG:
 
 # Configure Django App for Heroku
 django_heroku.settings(locals(), logging=False)
-
-# Optional: Manually add WhiteNoiseMiddleware to avoid conflicts
-if 'MIDDLEWARE' in locals():
-    MIDDLEWARE.insert(1, 'whitenoise.middleware.WhiteNoiseMiddleware')
 
