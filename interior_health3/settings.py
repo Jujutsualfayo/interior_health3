@@ -1,7 +1,6 @@
 import os
 from pathlib import Path
 import dj_database_url
-import django_heroku
 
 # Base directory
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -142,6 +141,3 @@ if not DEBUG:
     SECURE_SSL_REDIRECT = False  # No need for HTTPS in development
     SESSION_COOKIE_SECURE = False  # Don't require secure cookies in development
     CSRF_COOKIE_SECURE = False  # CSRF cookies don't need to be secure in development
-
-# Configure Django App for Heroku (disable logging for development)
-django_heroku.settings(locals(), logging=False)
