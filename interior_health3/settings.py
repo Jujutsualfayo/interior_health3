@@ -10,22 +10,22 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.getenv("DJANGO_SECRET_KEY", "your-default-key-for-dev")  # Replace in production!
 
 # Debug mode
-DEBUG = os.getenv("DJANGO_DEBUG", "False") == "True"
+DEBUG = "True"
 
 # Allowed Hosts
-ALLOWED_HOSTS = os.getenv("DJANGO_ALLOWED_HOSTS", "127.0.0.1,localhost").split(",")
+ALLOWED_HOSTS = "127.0.0.1,localhost"
 
 # Trusted CSRF origins
 CSRF_TRUSTED_ORIGINS = [
     'http://127.0.0.1:8000',
     'https://localhost:8000',
-    'https://your-production-domain.com',
+    
 ]
 
 # CORS Configuration
 CORS_ALLOWED_ORIGINS = [
     'http://localhost:3000',  # React local development
-    'https://your-production-domain.com',
+    
 ]
 CORS_ALLOW_ALL_ORIGINS = DEBUG  # Allow all in dev only
 
