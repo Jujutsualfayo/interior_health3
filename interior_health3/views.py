@@ -1,10 +1,9 @@
 from django.views.generic import TemplateView
 
-class ReactAppView(TemplateView):
-    template_name = "index.html"
+from django.views import View
+from django.shortcuts import render
 
+class ReactAppView(View):
     def get(self, request, *args, **kwargs):
-        try:
-            return super().get(request, *args, **kwargs)
-        except TemplateDoesNotExist:
-            return HttpResponseNotFound('<h1>React App not built yet.</h1>')
+        return render(request, 'index.html')  # Adjust the template if necessary
+
