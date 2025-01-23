@@ -1,21 +1,16 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib import messages
-from .forms import UserRegistrationForm, UserUpdateForm, ProfileUpdateForm
-from .models import Profile
-from django.contrib.auth import get_user
-from django.contrib.auth.models import Group, User
+from django.contrib.auth.models import Group
 from rest_framework import viewsets, permissions
-from .serializers import UserSerializer
 from rest_framework.decorators import action
 from rest_framework.response import Response
-from django.views.generic import TemplateView
-from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
+from .models import User, Profile
+from .forms import UserRegistrationForm, UserUpdateForm, ProfileUpdateForm
+from .serializers import UserSerializer
 
-
-# Traditional views remain unchanged
-
+# Traditional views
 def home(request):
     return render(request, 'home.html')
 
@@ -26,22 +21,22 @@ def register(request):
     if request.method == 'POST':
         form = UserRegistrationForm(request.POST)
         if form.is_valid():
-            user = form.save()
-            # Assign group based on role
-            try:
-                if user.role == 'admin':
-                    group = Group.objects.get(name='Admin')
-                elif user.role == 'health_worker':
-                    group = Group.objects.get(name='Health Worker')
-                elif user.role == 'patient':
-                    group = Group.objects.get(name='Patient')
-                else:
-                    group = None
+            user = form.save(commit=False)
+            user.save()
 
-                if group:
+            # Assign user to the correct group based on role
+            try:
+                role_group_mapping = {
+                    'admin': 'Admin',
+                    'health_worker': 'Health Worker',
+                    'patient': 'Patient'
+                }
+                group_name = role_group_mapping.get(user.role, None)
+                if group_name:
+                    group = Group.objects.get(name=group_name)
                     group.user_set.add(user)
                 else:
-                    messages.error(request, 'Invalid role assigned to the user.')
+                    messages.error(request, 'Invalid role selected.')
 
             except Group.DoesNotExist:
                 messages.error(request, 'Role group does not exist. Contact admin.')
@@ -57,14 +52,14 @@ def login_view(request):
     Handles user login.
     """
     if request.method == 'POST':
-        username = request.POST['username']
-        password = request.POST['password']
+        username = request.POST.get('username')
+        password = request.POST.get('password')
         user = authenticate(request, username=username, password=password)
         if user:
             login(request, user)
             return redirect('users:home')
         else:
-            return render(request, 'users/login.html', {'error': 'Invalid username or password.'})
+            messages.error(request, 'Invalid username or password.')
     return render(request, 'users/login.html')
 
 def logout_view(request):
@@ -79,7 +74,7 @@ def profile(request):
     """
     Handles user profile updates and ensures a profile exists for the logged-in user.
     """
-    user = get_user(request)  # Force resolving to a User instance
+    user = request.user
 
     # Ensure the user has a profile
     if not hasattr(user, 'profile'):
@@ -101,7 +96,6 @@ def profile(request):
         'user_form': user_form,
         'profile_form': profile_form
     })
-
 
 @login_required
 @user_passes_test(lambda u: u.groups.filter(name='Admin').exists())
@@ -126,5 +120,8 @@ class UserViewSet(viewsets.ModelViewSet):
 
     @action(detail=False, methods=['get'])
     def current_user(self, request):
+        """
+        Custom action to return the currently authenticated user's data.
+        """
         serializer = self.get_serializer(request.user)
         return Response(serializer.data)
