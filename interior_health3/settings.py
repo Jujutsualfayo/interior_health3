@@ -6,9 +6,7 @@ import django_heroku
 # Base directory
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-django_heroku.settings(locals())
-
-# Secret key from environment variable
+# Secret key from environment variable (mandatory in production)
 SECRET_KEY = os.getenv("DJANGO_SECRET_KEY", "your-default-key-for-dev")  # Replace in production!
 
 # Debug mode
@@ -154,3 +152,11 @@ if not DEBUG:
     SECURE_SSL_REDIRECT = True
     SESSION_COOKIE_SECURE = True
     CSRF_COOKIE_SECURE = True
+
+# Configure Django App for Heroku
+django_heroku.settings(locals(), logging=False)
+
+# Optional: Manually add WhiteNoiseMiddleware to avoid conflicts
+if 'MIDDLEWARE' in locals():
+    MIDDLEWARE.insert(1, 'whitenoise.middleware.WhiteNoiseMiddleware')
+
