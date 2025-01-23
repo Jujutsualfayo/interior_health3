@@ -12,7 +12,6 @@ class CustomGroupAdmin(admin.ModelAdmin):
     filter_horizontal = ('permissions',)  # Easier management of permissions in the admin
 
 # Register models with customizations
-admin.site.register(User)
 admin.site.register(Profile)
 admin.site.register(Group, CustomGroupAdmin)
 admin.site.register(Permission)
