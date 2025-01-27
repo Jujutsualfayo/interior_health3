@@ -7,5 +7,5 @@ class DrugAdmin(admin.ModelAdmin):
     list_filter = ('category', 'expiry_date')
     ordering = ('name',)
 
-# Register the Drug model with the custom admin
+# Registering the drug model
 admin.site.register(Drug, DrugAdmin)
